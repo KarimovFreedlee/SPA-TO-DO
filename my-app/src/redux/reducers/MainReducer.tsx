@@ -1,25 +1,10 @@
 import { AnyAction } from "redux"
 import { ITask } from "../../components/taskScene/Task"
 import { ITaskColumn } from "../../components/taskScene/Tasks"
+import { getColumnsFromLocalStorage, getTasksFromLocalStorage } from "../../localStorage/LocalStorage"
 
 export const SET_ALL_TASKS = "SET_ALL_TASKS"
 export const SET_ALL_COLUMNS = "SET_ALL_COLUMNS"
-
-const queueColumn: ITaskColumn = {
-    id: "0",
-    name: "Queue",
-    tasks: []
-}
-const developmentColumn: ITaskColumn = {
-    id: "1",
-    name: "Development",
-    tasks: []
-}
-const doneColumn: ITaskColumn = {
-    id: "2",
-    name: "Done",
-    tasks: []
-}
 
 export interface IState {
     allTasks: ITask[]
@@ -27,8 +12,8 @@ export interface IState {
 }
 
 export const initialState: IState = {
-    allTasks: [],
-    columns: [queueColumn, developmentColumn, doneColumn]
+    allTasks: getTasksFromLocalStorage(),
+    columns: getColumnsFromLocalStorage()
 }
 
 export interface IAction {

@@ -4,7 +4,7 @@ import "../../css/Tasks.scss"
 import Button from 'react-bootstrap/Button';
 import TaskModal from '../modals/TaskModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { ALL_TASKS, COLUMNS, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { setColumns, setTasks } from '../../redux/actions/TaskActions';
@@ -35,8 +35,8 @@ export default function Tasks() {
     }, [searchText])
 
     React.useEffect(() => {
-        writeLocalStorage("allTasks", visiableTasks)
-        writeLocalStorage("columns", taskColumns)
+        writeLocalStorage(ALL_TASKS, visiableTasks)
+        writeLocalStorage(COLUMNS, taskColumns)
     }, [visiableTasks, taskColumns])
 
     const setTaskColumns = (columns: ITaskColumn[]) => {
@@ -108,6 +108,7 @@ export default function Tasks() {
                                     className="tasks__list list-pending"
                                     {...provider.droppableProps}
                                     ref={provider.innerRef}
+                                    key={item.id}
                                     >
                                         <h1>{item.name}</h1>
                                         {item.tasks.map((item, index) => {
