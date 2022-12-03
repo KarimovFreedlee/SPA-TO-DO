@@ -4,34 +4,23 @@ import "../../css/Tasks.scss"
 import Button from 'react-bootstrap/Button';
 import TaskModal from '../modals/TaskModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
+import { readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { useDispatch, useSelector } from 'react-redux';
+import { IState } from '../../redux/reducers/MainReducer';
+import { setColumns, setTasks } from '../../redux/actions/TaskActions';
 
-interface ITaskColumn {
+export interface ITaskColumn {
     id: string,
     name: string,
     tasks: ITask[]
 }
 
-const queueColumn: ITaskColumn = {
-    id: "0",
-    name: "Queue",
-    tasks: []
-}
-const developmentColumn: ITaskColumn = {
-    id: "1",
-    name: "Development",
-    tasks: []
-}
-const doneColumn: ITaskColumn = {
-    id: "2",
-    name: "Done",
-    tasks: []
-}
-
 export default function Tasks() {
-
-    const [taskArr, setTaskArr] = React.useState<ITask[]>([])
-    const [visiableTasks, setVisiableTasks] = React.useState<ITask[]>([])
-    const [taskColumns, setTaskColumns] = React.useState<ITaskColumn[]>([queueColumn, developmentColumn, doneColumn])
+    //redux const
+    const dispatch = useDispatch()
+    const visiableTasks = useSelector((state: IState) => state.allTasks)
+    const taskColumns = useSelector((state: IState) => state.columns)
+    //useState const
     const [taskModal, setTaskModal] = React.useState(false)
     const [searchText, setSearchText] = React.useState("")
 
@@ -42,10 +31,19 @@ export default function Tasks() {
             else
                 visiableTasks[i].visiable = false
         }
-        setVisiableTasks([...visiableTasks])
+        dispatch(setTasks([...visiableTasks]))
     }, [searchText])
 
-    const onDragEnd = (result: any, columns: ITaskColumn[], setTaskColumns: any) => {
+    React.useEffect(() => {
+        writeLocalStorage("allTasks", visiableTasks)
+        writeLocalStorage("columns", taskColumns)
+    }, [visiableTasks, taskColumns])
+
+    const setTaskColumns = (columns: ITaskColumn[]) => {
+        dispatch(setColumns(columns))
+    }
+
+    const onDragEnd = (result: any, columns: ITaskColumn[], setTaskColumns: (columns: ITaskColumn[]) => void) => {
         if (!result.destination) return;
         const { source, destination } = result;
 
@@ -85,7 +83,7 @@ export default function Tasks() {
         }
         taskColumns[0].tasks.push(newTask)
         setTaskColumns([...taskColumns])
-        setVisiableTasks([...visiableTasks, newTask])
+        dispatch(setTasks([...visiableTasks, newTask]))
     }
 
     const closeModal = () => {
@@ -139,7 +137,7 @@ export default function Tasks() {
                 </DragDropContext>
             </div>
             <Button onClick={addTask}>Add task</Button>
-            {taskModal && <TaskModal closeModal={closeModal} task={taskArr[0]}/>}
+            {taskModal && <TaskModal closeModal={closeModal} task={visiableTasks[0]}/>}
         </>
     )
 }
