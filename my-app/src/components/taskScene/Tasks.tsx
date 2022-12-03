@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 
 interface ITaskColumn {
     id: string,
-    name: string
+    name: string,
     tasks: ITask[]
 }
 
@@ -30,8 +30,20 @@ const doneColumn: ITaskColumn = {
 export default function Tasks() {
 
     const [taskArr, setTaskArr] = React.useState<ITask[]>([])
+    const [visiableTasks, setVisiableTasks] = React.useState<ITask[]>([])
     const [taskColumns, setTaskColumns] = React.useState<ITaskColumn[]>([queueColumn, developmentColumn, doneColumn])
     const [taskModal, setTaskModal] = React.useState(false)
+    const [searchText, setSearchText] = React.useState("")
+
+    React.useEffect(() => {
+        for(let i = 0; i < visiableTasks.length; i++) {
+            if(visiableTasks[i].title.includes(searchText) || visiableTasks[i].number.toString().includes(searchText))
+                visiableTasks[i].visiable = true
+            else
+                visiableTasks[i].visiable = false
+        }
+        setVisiableTasks([...visiableTasks])
+    }, [searchText])
 
     const onDragEnd = (result: any, columns: ITaskColumn[], setTaskColumns: any) => {
         if (!result.destination) return;
@@ -69,17 +81,25 @@ export default function Tasks() {
             status: "done",
             createDate: new Date().toDateString(),
             time: "string",
+            visiable: true
         }
         taskColumns[0].tasks.push(newTask)
         setTaskColumns([...taskColumns])
+        setVisiableTasks([...visiableTasks, newTask])
     }
 
     const closeModal = () => {
         setTaskModal(false)
     }
 
+    const onTextInputChange = (e: any) => {
+        e.preventDefault()
+        setSearchText(e.target.value);
+    }
+
     return (
         <>
+            <input type="text" onChange={(e) => onTextInputChange(e)}/>
             <div className="tasks">
                 <DragDropContext onDragEnd={result => onDragEnd(result, taskColumns, setTaskColumns)}>
                     {taskColumns.map((item, index) => {
@@ -105,7 +125,7 @@ export default function Tasks() {
                                                     {...provider.dragHandleProps}
                                                     onClick={() => setTaskModal(true)}
                                                     >
-                                                        <Task task={item}/>
+                                                        {item.visiable && <Task task={item}/>}
                                                     </div>
                                                 }}
                                             </Draggable>

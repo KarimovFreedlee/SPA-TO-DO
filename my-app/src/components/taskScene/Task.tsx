@@ -10,6 +10,7 @@ export interface ITask {
   status: TStatus,
   createDate: string,
   time: string,
+  visiable: boolean
 }
 
 export interface ITaskProps {
@@ -28,8 +29,6 @@ export default function Task({task}: ITaskProps) {
           <Card.Body>
             <Card.Title>{task.title}</Card.Title>
             <Card.Text>
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
             </Card.Text>
           </Card.Body>
         </Card>
