@@ -124,7 +124,7 @@ export default function Tasks() {
                                                     {...provider.dragHandleProps}
                                                     onClick={() => setTaskModal(true)}
                                                     >
-                                                        {item.visiable && <Task task={item}/>}
+                                                        {visiableTasks[index].visiable && <Task task={item}/>}
                                                     </div>
                                                 }}
                                             </Draggable>
