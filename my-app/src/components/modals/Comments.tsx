@@ -19,23 +19,23 @@ export default function Comments({comments, sendComment}: ICommentsProps) {
     }
 
     const respond = React.useMemo(() => {
-        return <form onSubmit={sendComment}>
-            <input ref={commentRef} type="text" onChange={(e) => onTextInputChange(e)}/> 
-            <button className="task-modal__button btn" type='submit'>Send</button>
-        </form>
+        // return <form onSubmit={sendComment}>
+        //     <input ref={commentRef} type="text" onChange={(e) => onTextInputChange(e)}/> 
+        //     <button className="task-modal__button btn" type='submit'>Send</button>
+        // </form>
     },[])
 
     return (
-    <div className="comments">
+    <>
         {comments.map((item, index) => {
-            return <div key={index} className="comments__comment">
+            return <div key={index} className="comments__comment" ref={commentRef}>
                 {item.coment}
-                {/* {respondActive ? respond : <span onClick={() => setRespondeActive(true)}> response </span>} */}
+                {/* {respondActive ? respond : <p onClick={() => setRespondeActive(true)}> response </p>} */}
                 <div className="comments__subcomments">
                     {item.subcoments && <Comments comments={item.subcoments} sendComment={sendComment} />}
                 </div>
             </div>
         })}
-    </div>
+    </>
   )
 }

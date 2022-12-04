@@ -33,9 +33,15 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
         
     }
 
+    const reTitle = () => {
+        
+    }
+
     const comments = React.useMemo(() => {
         return <>
-            <Comments comments={task.comments || []} sendComment={sendComment} />
+            <div className="comments">
+                <Comments comments={task.comments || []} sendComment={sendComment} />
+            </div>
             <form onSubmit={sendComment}>
                 <input ref={commentRef} type="text" onChange={(e) => onTextInputChange(e)}/> 
                 <button className="task-modal__button btn" type='submit'>Send</button>
