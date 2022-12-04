@@ -1,0 +1,18 @@
+.comments {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &__comment {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        border-left: 1px #80808030 solid;
+    }
+
+    &__subcomments {
+        position: relative;
+        left: 15%
+    }
+}

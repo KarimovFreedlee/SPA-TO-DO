@@ -10,11 +10,17 @@ export interface ITask {
   status: TStatus,
   createDate: string,
   time: string,
+  comments?: IComment[],
   visiable: boolean
 }
 
 export interface ITaskProps {
-    task: ITask,
+  task: ITask,
+}
+
+export interface IComment {
+  coment: string,
+  subcoments?: IComment[]
 }
 
 export default function Task({task}: ITaskProps) {
@@ -29,6 +35,7 @@ export default function Task({task}: ITaskProps) {
           <Card.Body>
             <Card.Title>{task.title}</Card.Title>
             <Card.Text>
+              {task.status}
             </Card.Text>
           </Card.Body>
         </Card>

@@ -7,4 +7,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &__modal {
+        height: 500px;
+        width: 80%;
+        background-color: white;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        padding: 0 10%;
+    }
+
+    &__sidebar {
+        background-color: #f4f5f7;
+        padding: 40px;
+    }
+}
+
+.btn {
+    background-color: #0d6efd;
+    color: white;
+    height: 38px;
+    width: 87px;
 }
