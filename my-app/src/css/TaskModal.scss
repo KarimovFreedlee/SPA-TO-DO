@@ -9,8 +9,9 @@
     align-items: center;
 
     &__modal {
-        height: 500px;
+        height: 800px;
         width: 80%;
+        max-width: 1000px;
         background-color: white;
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -32,6 +33,10 @@
         background-color: #f4f5f7;
         padding: 40px;
     }
+
+    &__description {
+        max-height: 300px;
+    }
 }
 
 .btn {
@@ -39,4 +44,5 @@
     color: white;
     height: 38px;
     width: 87px;
+    margin: 10px 10px;
 }

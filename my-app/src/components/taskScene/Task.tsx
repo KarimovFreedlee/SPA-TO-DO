@@ -7,6 +7,7 @@ export interface ITask {
   id: string
   number: number,
   title: string,
+  description: string
   status: TStatus,
   createDate: string,
   time: string,

@@ -13,11 +13,6 @@ export default function Comments({comments, sendComment}: ICommentsProps) {
     const [respondText, setRespondText] = React.useState("")
     const commentRef = React.useRef(null)
 
-    const onTextInputChange = (e: any) => {
-        e.preventDefault()
-        setRespondText(e.target.value);
-    }
-
     const respond = React.useMemo(() => {
         // return <form onSubmit={sendComment}>
         //     <input ref={commentRef} type="text" onChange={(e) => onTextInputChange(e)}/> 

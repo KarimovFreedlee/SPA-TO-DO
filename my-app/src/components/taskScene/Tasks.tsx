@@ -15,40 +15,6 @@ export interface ITaskColumn {
     tasks: ITask[]
 }
 
-const testTask: ITask = {
-    id: new Date().getTime().toString(),
-    number: 1,
-    title: "testTask",
-    status: "queue",
-    createDate: new Date().toDateString(),
-    time: "string",
-    comments: [
-        {
-            coment: "test comment",
-            subcoments: [
-                {
-                    coment: "test Subcomment"
-                },
-                {
-                    coment: "test Subcomment"
-                },
-            ]
-        },
-        {
-            coment: "test comment two",
-            subcoments: [
-                {
-                    coment: "test Subcomment two"
-                },
-                {
-                    coment: "test Subcomment two two"
-                },
-            ]
-        },
-    ],
-    visiable: true
-}
-
 export default function Tasks() {
     //redux const
     const dispatch = useDispatch()
@@ -127,11 +93,13 @@ export default function Tasks() {
         const newTask: ITask = {
             id: new Date().getTime().toString(),
             number: 1,
+            description: "",
             title: title ? title : "",
             status: "queue",
             createDate: new Date().toDateString(),
             time: "string",
-            visiable: true
+            visiable: true,
+            comments: []
         }
         taskColumns[0].tasks.push(newTask)
         setTaskColumns([...taskColumns])
@@ -195,7 +163,7 @@ export default function Tasks() {
                 </DragDropContext>
             </div>
             <button className="btn" onClick={addTask}>Add task</button>
-            {taskModal && <TaskModal closeModal={closeModal} task={testTask}/>}
+            {taskModal && <TaskModal closeModal={closeModal} task={clickedTask}/>}
         </>
     )
 }
