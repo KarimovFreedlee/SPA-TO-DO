@@ -2,7 +2,7 @@ import React from 'react'
 import { IComment } from '../taskScene/Task'
 import "../../css/Comments.scss"
 import { useDispatch } from 'react-redux'
-import { setCommentIndex } from '../../redux/actions/TaskActions'
+import { setActiveComment, setCommentIndex } from '../../redux/actions/TaskActions'
 
 interface ICommentsProps {
     comments: IComment[],
@@ -15,14 +15,14 @@ export default function Comments({comments, sendComment}: ICommentsProps) {
 
     const onRespondClick = (index: number) => {
         console.log(comments[index])
-        dispatch(setCommentIndex(index))
+        dispatch(setActiveComment(comments[index].subcoments))
     }
 
     return (
     <>
         {comments.map((item, index) => {
             return <div key={index} className="comments__comment" ref={commentRef}>
-                {item.coment}
+                {item.comment}
                 <div className="comments__options">
                     <p onClick={() => onRespondClick(index)}>respond</p>
                     <p>report</p>

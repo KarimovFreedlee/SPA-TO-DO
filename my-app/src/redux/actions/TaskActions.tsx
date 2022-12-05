@@ -1,7 +1,7 @@
 import { AnyAction } from "redux"
-import { ITask } from "../../components/taskScene/Task"
+import { IComment, ITask } from "../../components/taskScene/Task"
 import { ITaskColumn } from "../../components/taskScene/Tasks"
-import { IAction, SET_ALL_COLUMNS, SET_ALL_TASKS, SET_CLICK_TASK, SET_COMMENT_INDEX } from "../reducers/MainReducer"
+import { IAction, SET_ACTIVE_COMMENT, SET_ALL_COLUMNS, SET_ALL_TASKS, SET_CLICK_TASK, SET_COMMENT_INDEX } from "../reducers/MainReducer"
 
 export const setTasks = (tasks: ITask[]) => {
     const newAction: IAction = {
@@ -31,6 +31,14 @@ export const setCommentIndex = (index: number) => {
     const newAction: IAction = {
         type: SET_COMMENT_INDEX,
         payload: index
+    }
+    return newAction
+}
+
+export const setActiveComment = (comment: IComment[]) => {
+    const newAction: IAction = {
+        type: SET_ACTIVE_COMMENT,
+        payload: comment
     }
     return newAction
 }

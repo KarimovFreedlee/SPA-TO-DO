@@ -11,7 +11,7 @@ export interface ITask {
   status: TStatus,
   createDate: string,
   time: string,
-  comments?: IComment[],
+  comments: IComment[],
   visiable: boolean
 }
 
@@ -20,8 +20,8 @@ export interface ITaskProps {
 }
 
 export interface IComment {
-  coment: string,
-  subcoments?: IComment[]
+  comment: string,
+  subcoments: IComment[]
 }
 
 export default function Task({task}: ITaskProps) {

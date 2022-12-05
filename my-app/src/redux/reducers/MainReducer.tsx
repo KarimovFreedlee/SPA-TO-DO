@@ -1,4 +1,4 @@
-import { ITask } from "../../components/taskScene/Task"
+import { IComment, ITask } from "../../components/taskScene/Task"
 import { ITaskColumn } from "../../components/taskScene/Tasks"
 import { getColumnsFromLocalStorage, getTasksFromLocalStorage } from "../../localStorage/LocalStorage"
 
@@ -6,19 +6,22 @@ export const SET_ALL_TASKS = "SET_ALL_TASKS"
 export const SET_ALL_COLUMNS = "SET_ALL_COLUMNS"
 export const SET_CLICK_TASK = "SET_CLICK_TASK"
 export const SET_COMMENT_INDEX = "SET_COMMENT_INDEX"
+export const SET_ACTIVE_COMMENT = "SET_ACTIVE_COMMENT"
 
 export interface IState {
     allTasks: ITask[]
     columns: ITaskColumn[],
     clickTask: ITask,
-    commentIndex: number
+    commentIndex: number,
+    activeComment: IComment[]
 }
 
 export const initialState: IState = {
     allTasks: getTasksFromLocalStorage(),
     columns: getColumnsFromLocalStorage(),
     clickTask: getTasksFromLocalStorage()[0],
-    commentIndex: 0
+    commentIndex: 0,
+    activeComment: []
 }
 
 export interface IAction {
@@ -36,6 +39,8 @@ export const mainReducer = (state: IState = initialState, action: IAction): ISta
             return {...state, clickTask: action.payload }
         case SET_COMMENT_INDEX:
             return {...state, commentIndex: action.payload }
+        case SET_ACTIVE_COMMENT:
+            return {...state, activeComment: action.payload }
         default:
             return state
     }

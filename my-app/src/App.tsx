@@ -1,10 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import './App.css';
-import { ITask } from './components/taskScene/Task';
-import Tasks, { ITaskColumn } from "./components/taskScene/Tasks"
-import { readLocalStorage } from './localStorage/LocalStorage';
-import { setColumns, setTasks } from './redux/actions/TaskActions';
+import Tasks from "./components/taskScene/Tasks"
 
 function App() {
   return (

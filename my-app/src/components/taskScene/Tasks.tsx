@@ -1,13 +1,12 @@
 import React from 'react'
 import Task, { ITask } from "./Task"
 import "../../css/Tasks.scss"
-import Button from 'react-bootstrap/Button';
 import TaskModal from '../modals/TaskModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { ALL_TASKS, COLUMNS, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
-import { setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
+import { setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
 
 export interface ITaskColumn {
     id: string,
@@ -108,6 +107,7 @@ export default function Tasks() {
 
     const openModal = (item: ITask) => {
         dispatch(setClickedTask(item))
+        dispatch(setActiveComment(item.comments))
         setTaskModal(true)
     }
 
