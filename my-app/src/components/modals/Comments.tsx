@@ -2,7 +2,7 @@ import React from 'react'
 import { IComment } from '../taskScene/Task'
 import "../../css/Comments.scss"
 import { useDispatch } from 'react-redux'
-import { setActiveComment, setCommentIndex } from '../../redux/actions/TaskActions'
+import { setActiveComment, setInputActive } from '../../redux/actions/TaskActions'
 
 interface ICommentsProps {
     comments: IComment[],
@@ -14,8 +14,8 @@ export default function Comments({comments, sendComment}: ICommentsProps) {
     const commentRef = React.useRef(null)
 
     const onRespondClick = (index: number) => {
-        console.log(comments[index])
         dispatch(setActiveComment(comments[index].subcoments))
+        dispatch(setInputActive(true))
     }
 
     return (

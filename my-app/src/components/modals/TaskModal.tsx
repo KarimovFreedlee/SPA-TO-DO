@@ -9,7 +9,7 @@ import { DragDrop } from '@uppy/react'
 import { useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { useDispatch } from 'react-redux';
-import { setActiveComment } from '../../redux/actions/TaskActions';
+import { setActiveComment, setInputActive } from '../../redux/actions/TaskActions';
 
 export interface ITaskModalProps extends ITaskProps {
     closeModal: () => void
@@ -17,7 +17,7 @@ export interface ITaskModalProps extends ITaskProps {
 
 export default function TaskModal({task, closeModal}: ITaskModalProps) {
     const dispatch = useDispatch()
-    const commentIndex = useSelector((state: IState) => state.commentIndex)
+    const activeInput = useSelector((state: IState) => state.inputActive)
     const activeCommentArray = useSelector((state: IState) => state.activeComment)
     const [descriptionText, setDescriptionText] = React.useState("")
     const [titleText, setTitleText] = React.useState(task.title)
@@ -26,11 +26,12 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
     const commentRef = React.useRef(null)
 
     React.useEffect(() => {
+        console.log(activeInput)
         const input: any = commentRef.current
-        if(input)
+        if(input && activeInput)
             input.focus()
 
-    }, [commentIndex])
+    }, [activeInput])
 
     const uppy = new Uppy({
         meta: { type: 'avatar' },
@@ -61,6 +62,7 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
         }
         activeCommentArray.push(newComment)
         dispatch(setActiveComment(task.comments))
+        dispatch(setInputActive(false))
         setText("")
     }
 
