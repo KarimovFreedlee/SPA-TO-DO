@@ -1,7 +1,7 @@
 import { Editor } from '@tinymce/tinymce-react';
 import React from 'react'
 import "../../css/TaskModal.scss"
-import { IComment, ITaskProps } from '../taskScene/Task';
+import Task, { IComment, ITask, ITaskProps } from '../taskScene/Task';
 import Comments from './Comments';
 import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
@@ -11,22 +11,25 @@ import { IState } from '../../redux/reducers/MainReducer';
 import { useDispatch } from 'react-redux';
 import { setActiveComment, setInputActive } from '../../redux/actions/TaskActions';
 
-export interface ITaskModalProps extends ITaskProps {
-    closeModal: () => void
+export interface ITaskModalProps {
+    closeModal: () => void,
+    addTask: () => void
 }
 
-export default function TaskModal({task, closeModal}: ITaskModalProps) {
+export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const dispatch = useDispatch()
     const activeInput = useSelector((state: IState) => state.inputActive)
     const activeCommentArray = useSelector((state: IState) => state.activeComment)
+    const clickedTask = useSelector((state: IState) => state.clickTask)
+    const visiableTasks = useSelector((state: IState) => state.allTasks)
+
     const [descriptionText, setDescriptionText] = React.useState("")
-    const [titleText, setTitleText] = React.useState(task.title)
+    const [titleText, setTitleText] = React.useState(clickedTask.title)
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
     const commentRef = React.useRef(null)
 
     React.useEffect(() => {
-        console.log(activeInput)
         const input: any = commentRef.current
         if(input && activeInput)
             input.focus()
@@ -61,7 +64,7 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
             subcoments: []
         }
         activeCommentArray.push(newComment)
-        dispatch(setActiveComment(task.comments))
+        dispatch(setActiveComment(clickedTask.comments))
         dispatch(setInputActive(false))
         setText("")
     }
@@ -72,15 +75,21 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
     }
 
     const saveChanges = () => {
-        task.description = descriptionText
-        task.title = titleText
+        clickedTask.description = descriptionText
+        clickedTask.title = titleText
         setTitleChange(false)
+    }
+
+    const addSubtask = () => {
+        addTask()
+        console.log(visiableTasks)
+        clickedTask.subTasks.push(visiableTasks[visiableTasks.length - 1])
     }
 
     const comments = React.useMemo(() => {
         return <>
             <div className="comments">
-                <Comments comments={task.comments || []} sendComment={sendComment} />
+                <Comments comments={clickedTask.comments || []} sendComment={sendComment} />
             </div>
             <form onSubmit={sendComment}>
                 <input ref={commentRef} type="text" placeholder='add comment' onChange={(e) => onTextInputChange(e)}/> 
@@ -93,7 +102,7 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
         return <>
             <Editor
                 onEditorChange={(newText) => setDescriptionText(newText)}
-                value={task.description}
+                value={clickedTask.description}
                 apiKey='u73ewtcis7l2b26jfjg7pneiatlxotpobnpiskzaun3rh82j' 
                 init={{
                     height: 300,
@@ -105,9 +114,9 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
 
     const title = React.useMemo(() => {
         return titleChange ? 
-            <input type="text" onChange={onTitleTextChange} placeholder={task.title}/> 
+            <input type="text" onChange={onTitleTextChange} placeholder={clickedTask.title}/> 
             : <h3 className="task-modal__title" onClick={() => {setTitleChange(true)}}>
-                {task.title}
+                {clickedTask.title}
             </h3>
     },[setTitleChange, titleChange])
 
@@ -126,21 +135,34 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
         />
     }, [])
 
+    const sideBar = React.useMemo(() => {
+        return <div className="task-modal__sidebar">
+            <p>Status: {clickedTask.status}</p>
+            <p>priority: </p>
+            <div className="task-modal__subtasks">
+                <p className="task-modal__subtasks__text">subtask</p>
+                <div className="task-modal__subtasks__body">
+                    {clickedTask.subTasks?.map((item) => {
+                        return <Task task={item}/>
+                    })}
+                </div>
+                <button className="btn" onClick={addSubtask}>add</button>
+            </div>
+        </div>
+    }, [clickedTask.subTasks.length])
+
     return (
         <div className="task-modal" onClick={closeModal}>
             <div className="task-modal__modal" onClick={(e) => e.stopPropagation()}>
                 <div className="task-modal__body">
-                    <p>Task: {task.number}</p>
+                    <p>Task: {clickedTask.number}</p>
                     {title}
                     {fileUploader}
                     {description}
                     <button className="task-modal__button btn" onClick={saveChanges}>Save</button>
                     {comments}
                 </div>
-                <div className="task-modal__sidebar">
-                    <p>Status: {task.status}</p>
-                    <p>priority: </p>
-                </div>
+                {sideBar}
             </div>
         </div>
   )

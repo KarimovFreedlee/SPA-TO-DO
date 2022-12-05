@@ -19,7 +19,6 @@ export default function Tasks() {
     const dispatch = useDispatch()
     const visiableTasks = useSelector((state: IState) => state.allTasks)
     const taskColumns = useSelector((state: IState) => state.columns)
-    const clickedTask = useSelector((state: IState) => state.clickTask)
     //useState const
     const [taskModal, setTaskModal] = React.useState(false)
     const [searchText, setSearchText] = React.useState("")
@@ -35,10 +34,10 @@ export default function Tasks() {
         setTaskColumns(taskColumns)
     }, [searchText])
 
-    React.useEffect(() => {
-        writeLocalStorage(ALL_TASKS, visiableTasks)
-        writeLocalStorage(COLUMNS, [...taskColumns])
-    }, [visiableTasks, taskColumns])
+    // React.useEffect(() => {
+    //     writeLocalStorage(ALL_TASKS, visiableTasks)
+    //     writeLocalStorage(COLUMNS, [...taskColumns])
+    // }, [visiableTasks, taskColumns])
 
     const setTaskColumns = (columns: ITaskColumn[]) => {
         dispatch(setColumns(columns))
@@ -88,7 +87,9 @@ export default function Tasks() {
     };
 
     const addTask = () => {
-        const title: string | null = prompt("Enter tasks title")
+        const title: string | null = prompt("Enter task title")
+        if(title == null)
+            return
         const newTask: ITask = {
             id: new Date().getTime().toString(),
             number: 1,
@@ -98,11 +99,13 @@ export default function Tasks() {
             createDate: new Date().toDateString(),
             time: "string",
             visiable: true,
-            comments: []
+            comments: [],
+            subTasks: []
         }
         taskColumns[0].tasks.push(newTask)
-        setTaskColumns([...taskColumns])
-        dispatch(setTasks([...visiableTasks, newTask]))
+        visiableTasks.push(newTask)
+        dispatch(setTasks([...visiableTasks]))
+        dispatch(setColumns([...taskColumns]))
     }
 
     const openModal = (item: ITask) => {
@@ -163,7 +166,7 @@ export default function Tasks() {
                 </DragDropContext>
             </div>
             <button className="btn" onClick={addTask}>Add</button>
-            {taskModal && <TaskModal closeModal={closeModal} task={clickedTask}/>}
+            {taskModal && <TaskModal addTask={addTask} closeModal={closeModal}/>}
         </>
     )
 }
