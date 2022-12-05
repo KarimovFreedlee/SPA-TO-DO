@@ -32,7 +32,7 @@
     &__sidebar {
         border-left: 1px solid #c9c9c9;
         padding: 40px;
-        min-width: 369px;
+        min-width: 350px;
     }
 
     &__subtasks {
@@ -40,7 +40,7 @@
         &__body {
             overflow: scroll;
             max-height: 400px;
-            overflow-x: hidden; 
+            overflow-x: hidden;
         }
 
         &__text {

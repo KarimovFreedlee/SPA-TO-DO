@@ -1,6 +1,6 @@
 import { IComment, ITask } from "../../components/taskScene/Task"
 import { ITaskColumn } from "../../components/taskScene/Tasks"
-import { IAction, SET_ACTIVE_COMMENT, SET_ALL_COLUMNS, SET_ALL_TASKS, SET_CLICK_TASK, SET_COMMENT_INDEX, SET_INPUT_ACTIVE } from "../reducers/MainReducer"
+import { IAction, SET_ACTIVE_COMMENT, SET_ALL_COLUMNS, SET_ALL_TASKS, SET_CLICK_TASK, SET_COMMENT_INDEX, SET_INPUT_ACTIVE, SET_TASK_NUMBER } from "../reducers/MainReducer"
 
 export const setTasks = (tasks: ITask[]) => {
     const newAction: IAction = {
@@ -46,6 +46,14 @@ export const setInputActive = (value: boolean) => {
     const newAction: IAction = {
         type: SET_INPUT_ACTIVE,
         payload: value
+    }
+    return newAction
+}
+
+export const incTaskNumber = () => {
+    const newAction: IAction = {
+        type: SET_TASK_NUMBER,
+        payload: 0
     }
     return newAction
 }

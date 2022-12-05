@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import { ALL_TASKS, COLUMNS, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
-import { setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
+import { incTaskNumber, setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
 
 export interface ITaskColumn {
     id: string,
@@ -19,6 +19,7 @@ export default function Tasks() {
     const dispatch = useDispatch()
     const visiableTasks = useSelector((state: IState) => state.allTasks)
     const taskColumns = useSelector((state: IState) => state.columns)
+    const taskNumber = useSelector((state: IState) => state.taskNumber)
     //useState const
     const [taskModal, setTaskModal] = React.useState(false)
     const [searchText, setSearchText] = React.useState("")
@@ -92,7 +93,7 @@ export default function Tasks() {
             return
         const newTask: ITask = {
             id: new Date().getTime().toString(),
-            number: 1,
+            number: taskNumber,
             description: "",
             title: title ? title : "",
             status: "queue",
@@ -104,6 +105,7 @@ export default function Tasks() {
         }
         taskColumns[0].tasks.push(newTask)
         visiableTasks.push(newTask)
+        dispatch(incTaskNumber())
         dispatch(setTasks([...visiableTasks]))
         dispatch(setColumns([...taskColumns]))
     }
