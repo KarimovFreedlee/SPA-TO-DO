@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { useDispatch } from 'react-redux';
 import { setActiveComment, setInputActive } from '../../redux/actions/TaskActions';
+import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
 
 export interface ITaskModalProps {
     closeModal: () => void,
@@ -23,11 +24,14 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const clickedTask = useSelector((state: IState) => state.clickTask)
     const visiableTasks = useSelector((state: IState) => state.allTasks)
 
-    const [descriptionText, setDescriptionText] = React.useState("")
+    const [descriptionText, setDescriptionText] = React.useState(clickedTask.description)
     const [titleText, setTitleText] = React.useState(clickedTask.title)
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
     const commentRef = React.useRef(null)
+
+    const hoursDuration = Duration.fromObject(DateTime.local().minus(clickedTask.createDate.toObject()).toObject()).hours
+    const minDuration = Duration.fromObject(DateTime.local().minus(clickedTask.createDate.toObject()).toObject()).minutes
 
     React.useEffect(() => {
         const input: any = commentRef.current
@@ -136,9 +140,11 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     }, [])
 
     const sideBar = React.useMemo(() => {
+        console.log(clickedTask.createDate.toObject())
         return <div className="task-modal__sidebar">
             <p>Status: {clickedTask.status}</p>
             <p>priority: </p>
+            <p>time at work: {hoursDuration} hours {minDuration} min</p>
             <div className="task-modal__subtasks">
                 <p className="task-modal__subtasks__text">subtask</p>
                 <div className="task-modal__subtasks__body">
@@ -148,6 +154,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 </div>
                 <button className="btn" onClick={addSubtask}>add</button>
             </div>
+            <p>Create date: {clickedTask.createDate.toLocaleString()}</p>
         </div>
     }, [clickedTask.subTasks.length])
 

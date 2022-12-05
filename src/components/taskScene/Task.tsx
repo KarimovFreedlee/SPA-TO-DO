@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import React from 'react'
 import Card from 'react-bootstrap/Card';
 
@@ -9,7 +10,7 @@ export interface ITask {
   title: string,
   description: string
   status: TStatus,
-  createDate: string,
+  createDate: DateTime,
   time: string,
   comments: IComment[],
   visiable: boolean,

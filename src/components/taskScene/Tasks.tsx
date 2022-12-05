@@ -7,6 +7,7 @@ import { ALL_TASKS, COLUMNS, writeLocalStorage } from '../../localStorage/LocalS
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { incTaskNumber, setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
+import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
 
 export interface ITaskColumn {
     id: string,
@@ -97,7 +98,7 @@ export default function Tasks() {
             description: "",
             title: title ? title : "",
             status: "queue",
-            createDate: new Date().toDateString(),
+            createDate: DateTime.local(),
             time: "string",
             visiable: true,
             comments: [],
