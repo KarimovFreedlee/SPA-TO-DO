@@ -28,6 +28,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const [titleText, setTitleText] = React.useState(clickedTask.title)
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
+    const [subOpen, setSubOpen] = React.useState(true)
     const commentRef = React.useRef(null)
 
     const hoursDuration = Duration.fromObject(DateTime.local().minus(clickedTask.createDate.toObject()).toObject()).hours
@@ -140,15 +141,15 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     }, [])
 
     const sideBar = React.useMemo(() => {
-        console.log(clickedTask.createDate.toObject())
         return <div className="task-modal__sidebar">
             <p>Status: {clickedTask.status}</p>
-            <p>priority: </p>
+            <p>priority: {clickedTask.priority}</p>
             <p>time at work: {hoursDuration} hours {minDuration} min</p>
             {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>}
             <div className="task-modal__subtasks">
-                <p className="task-modal__subtasks__text">subtask</p>
-                <div className="task-modal__subtasks__body">
+                <p className="task-modal__subtasks__text" onClick={() => setSubOpen(!subOpen)}>subtasks</p>
+                {/* <div className="task-modal__subtasks__body"> */}
+                <div className={`task-modal__subtasks__body task-modal__subtasks__body${subOpen ? "-open" : "-close"}`}>
                     {clickedTask.subTasks?.map((item) => {
                         return <Task task={item}/>
                     })}
@@ -157,7 +158,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
             </div>
             <p>Create date: {clickedTask.createDate.toLocaleString()}</p>
         </div>
-    }, [clickedTask.subTasks.length])
+    }, [clickedTask.subTasks.length, subOpen])
 
     return (
         <div className="task-modal" onClick={closeModal}>

@@ -103,7 +103,8 @@ export default function Tasks() {
             time: "string",
             visiable: true,
             comments: [],
-            subTasks: []
+            subTasks: [],
+            priority: "medium"
         }
         taskColumns[0].tasks.push(newTask)
         visiableTasks.push(newTask)

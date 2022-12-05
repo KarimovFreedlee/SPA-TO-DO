@@ -3,6 +3,7 @@ import React from 'react'
 import Card from 'react-bootstrap/Card';
 
 export type TStatus = "queue" | "developing" | "done"
+export type TPriority = "low" | "medium" | "high"
 
 export interface ITask {
   id: string
@@ -15,7 +16,8 @@ export interface ITask {
   comments: IComment[],
   visiable: boolean,
   subTasks: ITask[] ,
-  doneDate?: DateTime
+  doneDate?: DateTime,
+  priority: TPriority
 }
 
 export interface ITaskProps {

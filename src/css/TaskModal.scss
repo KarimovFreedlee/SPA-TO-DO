@@ -39,8 +39,18 @@
 
         &__body {
             overflow: scroll;
-            height: 400px;
             overflow-x: hidden;
+            border: 1px solid #c9c9c9;
+            margin-top: -17px;
+            transition: 1s;
+
+            &-open {
+                height: 400px;
+            }
+
+            &-close {
+                height: 0px;
+            }
         }
 
         &__text {
@@ -69,3 +79,5 @@
         color: white;
     }
 }
+
+
