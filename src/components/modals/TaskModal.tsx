@@ -156,7 +156,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 </div>
                 <button className="btn" onClick={addSubtask}>add</button>
             </div>
-            <p>Create date: {clickedTask.createDate.toLocaleString()}</p>
+            <p className="task-modal__create-date">Create date: {clickedTask.createDate.toLocaleString()}</p>
         </div>
     }, [clickedTask.subTasks.length, subOpen])
 
