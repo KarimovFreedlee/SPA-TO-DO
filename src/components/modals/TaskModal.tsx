@@ -9,7 +9,7 @@ import { DragDrop } from '@uppy/react'
 import { useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { useDispatch } from 'react-redux';
-import { setActiveComment, setInputActive } from '../../redux/actions/TaskActions';
+import { setActiveComment, setClickedTask, setInputActive } from '../../redux/actions/TaskActions';
 import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
 
 export interface ITaskModalProps {
@@ -111,7 +111,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 <button className="task-modal__button btn" type='submit'>Send</button>
             </form>
         </>
-    }, [text, commentRef])
+    }, [text, commentRef, clickedTask])
 
     const description = React.useMemo(() => {
         return <>
@@ -125,7 +125,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 }}
             />
         </>
-    },[])
+    },[clickedTask])
 
     const title = React.useMemo(() => {
         return titleChange ? 
@@ -133,7 +133,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
             : <h3 className="task-modal__title" onClick={() => {setTitleChange(true)}}>
                 {clickedTask.title}
             </h3>
-    },[setTitleChange, titleChange])
+    },[setTitleChange, titleChange, clickedTask])
 
     const fileUploader = React.useMemo(() => {
         return <DragDrop
@@ -148,7 +148,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 },
             }}
         />
-    }, [])
+    }, [clickedTask])
 
     const sideBar = React.useMemo(() => {
         return <div className="task-modal__sidebar">
@@ -160,8 +160,8 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 <p className="task-modal__subtasks__text" onClick={() => setSubOpen(!subOpen)}>subtasks</p>
                 {/* <div className="task-modal__subtasks__body"> */}
                 <div className={`task-modal__subtasks__body task-modal__subtasks__body${subOpen ? "-open" : "-close"}`}>
-                    {clickedTask.subTasks?.map((item) => {
-                        return <Task task={item}/>
+                    {clickedTask.subTasks?.map((item,index) => {
+                        return <div onClick={() => dispatch(setClickedTask(item))}><Task task={item}/></div>
                     })}
                 </div>
                 <button className="btn" onClick={addSubtask}>add</button>
