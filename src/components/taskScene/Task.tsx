@@ -14,7 +14,8 @@ export interface ITask {
   time: string,
   comments: IComment[],
   visiable: boolean,
-  subTasks: ITask[] 
+  subTasks: ITask[] ,
+  doneDate?: DateTime
 }
 
 export interface ITaskProps {

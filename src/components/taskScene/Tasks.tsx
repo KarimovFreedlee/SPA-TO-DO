@@ -70,7 +70,8 @@ export default function Tasks() {
 
             const [removed]: ITask[] = sourceItems.splice(source.index, 1);
             destItems.splice(destination.index, 0, {...removed, status: setTaskStatus(destination.droppableId)});
-
+            if(destItems[destination.index].status === "done")    
+                destItems[destination.index].doneDate = DateTime.local()
             const newDestColumn: ITaskColumn = {...destColumn, tasks: destItems}
             const newSourceColumn: ITaskColumn = {...sourceColumn, tasks: sourceItems}
 

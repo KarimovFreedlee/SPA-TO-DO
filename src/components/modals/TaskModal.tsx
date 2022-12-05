@@ -145,6 +145,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
             <p>Status: {clickedTask.status}</p>
             <p>priority: </p>
             <p>time at work: {hoursDuration} hours {minDuration} min</p>
+            {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>}
             <div className="task-modal__subtasks">
                 <p className="task-modal__subtasks__text">subtask</p>
                 <div className="task-modal__subtasks__body">
