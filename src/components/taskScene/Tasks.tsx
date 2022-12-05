@@ -57,6 +57,39 @@ export default function Tasks() {
         }
     }
 
+    const countTimeDuration = (startPoint: DateTime, endpoint: DateTime) => {
+        return Duration.fromObject(endpoint.minus(startPoint.toObject()).toObject())
+    }   
+
+    const onDnDTimeHandler = (task: ITask) => {
+        let localTime = DateTime.local()
+        let developingDate = task.developingDate || localTime
+        let developingTime = task.developingTime
+
+        switch(task.status) {
+            case "queue":
+                if(developingTime)
+                    task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
+                else
+                    task.developingTime = countTimeDuration(developingDate, localTime)
+                task.developingDate = undefined
+                task.doneDate = undefined
+            break;
+            case "developing":
+                task.developingDate = localTime
+                task.doneDate = undefined
+            break;
+            case "done":
+                if(developingTime)
+                    task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
+                else
+                    task.developingTime = countTimeDuration(developingDate, localTime)
+                task.developingDate = undefined
+                task.doneDate = localTime
+            break;
+        }    
+    }
+
     const onDragEnd = (result: any, columns: ITaskColumn[], setTaskColumns: (columns: ITaskColumn[]) => void) => {
         if (!result.destination) return;
         const { source, destination } = result;
@@ -70,8 +103,7 @@ export default function Tasks() {
 
             const [removed]: ITask[] = sourceItems.splice(source.index, 1);
             destItems.splice(destination.index, 0, {...removed, status: setTaskStatus(destination.droppableId)});
-            if(destItems[destination.index].status === "done")    
-                destItems[destination.index].doneDate = DateTime.local()
+            onDnDTimeHandler(destItems[destination.index])
             const newDestColumn: ITaskColumn = {...destColumn, tasks: destItems}
             const newSourceColumn: ITaskColumn = {...sourceColumn, tasks: sourceItems}
 

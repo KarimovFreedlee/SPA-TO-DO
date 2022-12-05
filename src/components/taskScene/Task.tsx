@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 import React from 'react'
 import Card from 'react-bootstrap/Card';
 
@@ -9,9 +9,11 @@ export interface ITask {
   id: string
   number: number,
   title: string,
-  description: string
+  description: string,
   status: TStatus,
   createDate: DateTime,
+  developingDate?: DateTime,
+  developingTime?: Duration,
   time: string,
   comments: IComment[],
   visiable: boolean,

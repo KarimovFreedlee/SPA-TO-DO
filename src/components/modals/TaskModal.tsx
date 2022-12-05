@@ -31,8 +31,9 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const [subOpen, setSubOpen] = React.useState(true)
     const commentRef = React.useRef(null)
 
-    const hoursDuration = Duration.fromObject(DateTime.local().minus(clickedTask.createDate.toObject()).toObject()).hours
-    const minDuration = Duration.fromObject(DateTime.local().minus(clickedTask.createDate.toObject()).toObject()).minutes
+    const localTime = DateTime.local()
+    const hoursDuration = countDuration().hours
+    const minDuration = countDuration().minutes
 
     React.useEffect(() => {
         const input: any = commentRef.current
@@ -56,6 +57,15 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
         //     payload: { url },
         // })
     })
+
+    function countDuration() {
+        const devDate = clickedTask.developingDate || localTime
+
+        if(clickedTask.developingTime)
+            return clickedTask.developingTime?.plus(Duration.fromObject(localTime.minus(devDate.toObject()).toObject()))
+        return Duration.fromObject(localTime.minus(devDate.toObject()).toObject())
+    }
+
     const onTextInputChange = (e: any) => {
         e.preventDefault()
         setText(e.target.value);
