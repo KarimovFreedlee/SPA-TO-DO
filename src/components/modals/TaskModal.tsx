@@ -11,6 +11,7 @@ import { IState } from '../../redux/reducers/MainReducer';
 import { useDispatch } from 'react-redux';
 import { setActiveComment, setClickedTask, setInputActive } from '../../redux/actions/TaskActions';
 import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
+import Priority from './Priority';
 
 export interface ITaskModalProps {
     closeModal: () => void,
@@ -153,7 +154,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const sideBar = React.useMemo(() => {
         return <div className="task-modal__sidebar">
             <p>Status: {clickedTask.status}</p>
-            <p>priority: {clickedTask.priority}</p>
+            <Priority/>
             <p>time at work: {hoursDuration} hours {minDuration} min</p>
             {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>}
             <div className="task-modal__subtasks">
