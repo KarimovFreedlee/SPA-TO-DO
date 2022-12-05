@@ -31,7 +31,7 @@ export default function Tasks() {
             else
                 visiableTasks[i].visiable = false
         }
-        dispatch(setTasks(visiableTasks))
+        dispatch(setTasks([...visiableTasks]))
         setTaskColumns(taskColumns)
     }, [searchText])
 
