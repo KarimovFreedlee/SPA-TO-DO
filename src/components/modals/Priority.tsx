@@ -5,10 +5,6 @@ import { setClickedTask } from '../../redux/actions/TaskActions'
 import { IState } from '../../redux/reducers/MainReducer'
 import { TPriority } from '../taskScene/Task'
 
-export interface IPriorityProps {
-
-}
-
 export default function Priority() {
     const dispatch = useDispatch()
     const clickedTask = useSelector((state: IState) => state.clickTask)
