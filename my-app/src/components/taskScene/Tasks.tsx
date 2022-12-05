@@ -162,7 +162,7 @@ export default function Tasks() {
                     })}
                 </DragDropContext>
             </div>
-            <button className="btn" onClick={addTask}>Add task</button>
+            <button className="btn" onClick={addTask}>Add</button>
             {taskModal && <TaskModal closeModal={closeModal} task={clickedTask}/>}
         </>
     )

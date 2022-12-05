@@ -3,6 +3,10 @@ import React from 'react'
 import "../../css/TaskModal.scss"
 import { IComment, ITaskProps } from '../taskScene/Task';
 import Comments from './Comments';
+import Uppy from '@uppy/core'
+import Tus from '@uppy/tus'
+import { DragDrop } from '@uppy/react'
+import Dashboard from '@uppy/dashboard'
 
 export interface ITaskModalProps extends ITaskProps {
     closeModal: () => void
@@ -10,15 +14,26 @@ export interface ITaskModalProps extends ITaskProps {
 
 export default function TaskModal({task, closeModal}: ITaskModalProps) {
     const [descriptionText, setDescriptionText] = React.useState("")
-    const [titleText, setTitleText] = React.useState("")
+    const [titleText, setTitleText] = React.useState(task.title)
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
     const commentRef = React.useRef(null)
 
-    const saveChanges = () => {
-        closeModal()
-    }
-
+    const uppy = new Uppy({
+        meta: { type: 'avatar' },
+        restrictions: { maxNumberOfFiles: 1 },
+        autoProceed: true,
+    })
+      
+    uppy.use(Tus, { endpoint: 'https://vault.apideck.com/logs' })
+      
+    uppy.on('complete', (result) => {
+        const url = result.successful[0].uploadURL
+        // store.dispatch({
+        //     type: 'SET_USER_AVATAR_URL',
+        //     payload: { url },
+        // })
+    })
     const onTextInputChange = (e: any) => {
         e.preventDefault()
         setText(e.target.value);
@@ -33,7 +48,6 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
         } 
         task.comments?.push(newComment)
         setText("")
-        
     }
 
     const onTitleTextChange = (e: any) => {
@@ -41,7 +55,7 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
         setTitleText(e.target.value);
     }
 
-    const saveDescription = () => {
+    const saveChanges = () => {
         task.description = descriptionText
         task.title = titleText
         setTitleChange(false)
@@ -68,16 +82,6 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
                 init={{
                     height: 300,
                     menubar: false,
-                    plugins: [
-                        'advlist autolink lists link image charmap print preview anchor',
-                        'searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table paste code help wordcount'
-                    ],
-                    toolbar: 'undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help',
-                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                 }}
             />
         </>
@@ -91,17 +95,30 @@ export default function TaskModal({task, closeModal}: ITaskModalProps) {
             </h3>
     },[setTitleChange, titleChange])
 
+    const fileUploader = React.useMemo(() => {
+        return <DragDrop
+            uppy={uppy}
+            locale={{
+                strings: {
+                    // Text to show on the droppable area.
+                    // `%{browse}` is replaced with a link that opens the system file selection dialog.
+                    dropHereOr: 'Drop files here or %{browse}',
+                    // Used as the label for the link that opens the system file selection dialog.
+                    browse: 'browse',
+                },
+            }}
+        />
+    }, [])
+
     return (
         <div className="task-modal" onClick={closeModal}>
-            <div className="task-modal__modal"
-            onClick={(e) => e.stopPropagation()}
-            >
+            <div className="task-modal__modal" onClick={(e) => e.stopPropagation()}>
                 <div className="task-modal__body">
                     <p>Task: {task.number}</p>
                     {title}
-                    <input type="file" />
+                    {fileUploader}
                     {description}
-                    <button className="task-modal__button btn" onClick={saveDescription}>Save</button>
+                    <button className="task-modal__button btn" onClick={saveChanges}>Save</button>
                     {comments}
                 </div>
                 <div className="task-modal__sidebar">

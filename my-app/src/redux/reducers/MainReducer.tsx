@@ -5,17 +5,20 @@ import { getColumnsFromLocalStorage, getTasksFromLocalStorage } from "../../loca
 export const SET_ALL_TASKS = "SET_ALL_TASKS"
 export const SET_ALL_COLUMNS = "SET_ALL_COLUMNS"
 export const SET_CLICK_TASK = "SET_CLICK_TASK"
+export const SET_COMMENT_INDEX = "SET_COMMENT_INDEX"
 
 export interface IState {
     allTasks: ITask[]
     columns: ITaskColumn[],
-    clickTask: ITask
+    clickTask: ITask,
+    commentIndex: number
 }
 
 export const initialState: IState = {
     allTasks: getTasksFromLocalStorage(),
     columns: getColumnsFromLocalStorage(),
-    clickTask: getTasksFromLocalStorage()[0]
+    clickTask: getTasksFromLocalStorage()[0],
+    commentIndex: 0
 }
 
 export interface IAction {
@@ -31,6 +34,8 @@ export const mainReducer = (state: IState = initialState, action: IAction): ISta
             return {...state, columns: action.payload }
         case SET_CLICK_TASK:
             return {...state, clickTask: action.payload }
+        case SET_COMMENT_INDEX:
+            return {...state, commentIndex: action.payload }
         default:
             return state
     }

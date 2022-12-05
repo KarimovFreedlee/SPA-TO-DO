@@ -15,8 +15,21 @@
         border-left: 1px #80808030 solid;
     }
 
+    &__options {
+        display: flex;
+        position: relative;
+        color: grey;
+        left: 16%;
+
+        p {
+            cursor: pointer;
+            margin-left: 5%;
+        }
+    }
+
     &__subcomments {
         position: relative;
         left: 15%
     }
+
 }
