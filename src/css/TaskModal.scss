@@ -40,6 +40,7 @@
         &__body {
             overflow: scroll;
             max-height: 400px;
+            overflow-x: hidden; 
         }
 
         &__text {
