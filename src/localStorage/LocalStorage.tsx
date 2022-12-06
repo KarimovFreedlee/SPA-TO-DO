@@ -1,25 +1,12 @@
+import { IProject } from "../components/projects/Projects"
 import { ITask } from "../components/taskScene/Task"
 import Tasks, { ITaskColumn } from "../components/taskScene/Tasks"
 
 export const COLUMNS = "columns"
 export const ALL_TASKS = "allTasks"
 export const FILES ="files"
+export const PROJECTS = "projects"
 
-const queueColumn: ITaskColumn = {
-    id: "0",
-    name: "Queue",
-    tasks: []
-}
-const developmentColumn: ITaskColumn = {
-    id: "1",
-    name: "Development",
-    tasks: []
-}
-const doneColumn: ITaskColumn = {
-    id: "2",
-    name: "Done",
-    tasks: []
-}
 
 export const writeLocalStorage = (key: string, value: any) => {
     const newValue = JSON.stringify(value)
@@ -38,7 +25,14 @@ export const getTasksFromLocalStorage = () => {
 
 export const getColumnsFromLocalStorage = () => {
     const columns: ITaskColumn[] = readLocalStorage(COLUMNS, "[]")
-    if(columns.length === 0 || columns === undefined)
-        return [queueColumn, developmentColumn, doneColumn]
+    // if(columns.length === 0 || columns === undefined)
+        // return [queueColumn, developmentColumn, doneColumn]
     return columns
+}
+
+export const getProjectsFromLocalStorage = () => {
+    const projects: IProject[] = readLocalStorage(PROJECTS, "[]")
+    if(projects.length === 0 || projects === undefined)
+        return []
+    return projects
 }

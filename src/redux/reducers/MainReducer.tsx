@@ -1,3 +1,4 @@
+import { IProject } from "../../components/projects/Projects"
 import { IComment, ITask } from "../../components/taskScene/Task"
 import { ITaskColumn } from "../../components/taskScene/Tasks"
 import { getColumnsFromLocalStorage, getTasksFromLocalStorage } from "../../localStorage/LocalStorage"

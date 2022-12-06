@@ -1,6 +1,16 @@
+import { IProject } from "../../components/projects/Projects"
 import { IComment, ITask } from "../../components/taskScene/Task"
 import { ITaskColumn } from "../../components/taskScene/Tasks"
-import { IAction, SET_ACTIVE_COMMENT, SET_ALL_COLUMNS, SET_ALL_TASKS, SET_CLICK_TASK, SET_COMMENT_INDEX, SET_INPUT_ACTIVE, SET_TASK_NUMBER } from "../reducers/MainReducer"
+import { 
+    IAction, 
+    SET_ACTIVE_COMMENT, 
+    SET_ALL_COLUMNS, 
+    SET_ALL_TASKS, 
+    SET_CLICK_TASK, 
+    SET_COMMENT_INDEX, 
+    SET_INPUT_ACTIVE, 
+    SET_TASK_NUMBER
+} from "../reducers/MainReducer"
 
 export const setTasks = (tasks: ITask[]) => {
     const newAction: IAction = {
