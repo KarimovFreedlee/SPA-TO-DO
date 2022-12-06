@@ -27,7 +27,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const clickedTask = useSelector((state: IState) => state.clickTask)
     const visiableTasks = useSelector((state: IState) => state.allTasks)
 
-    const [descriptionText, setDescriptionText] = React.useState(clickedTask.description)
+    const [descriptionText, setDescriptionText] = React.useState("")
     const [titleText, setTitleText] = React.useState(clickedTask.title)
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
@@ -142,8 +142,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 value={clickedTask.description}
                 apiKey='u73ewtcis7l2b26jfjg7pneiatlxotpobnpiskzaun3rh82j' 
                 init={{
-                    height: 250,
-                    menubar: false,
+                    height: 250
                 }}
             />
         </>
