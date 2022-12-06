@@ -3,7 +3,7 @@ import Task, { ITask } from "./Task"
 import "../../css/Tasks.scss"
 import TaskModal from '../modals/TaskModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { ALL_TASKS, COLUMNS, PROJECTS, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { ALL_TASKS, COLUMNS, getProjectsFromLocalStorage, PROJECTS, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { incTaskNumber, setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
@@ -36,6 +36,14 @@ export default function Tasks() {
         }
         dispatch(setTasks([...visiableTasks]))
     }, [searchText])
+
+    React.useEffect(() => {
+        const projects = getProjectsFromLocalStorage()
+        projects[activeProject].allTasks = visiableTasks
+        projects[activeProject].columns = taskColumns
+
+        writeLocalStorage(PROJECTS, projects)
+    }, [taskColumns, visiableTasks])
 
     const setTaskStatus = (columnIndex: string) => {
         switch(columnIndex) {
@@ -133,6 +141,7 @@ export default function Tasks() {
             files: []
         }
         taskColumns[0].tasks.push(newTask)
+        setTaskColumns([...taskColumns])
         setVisiableTasks([...visiableTasks, newTask])
     }
 
