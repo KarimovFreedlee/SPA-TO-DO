@@ -20,7 +20,6 @@ export default function Tasks() {
     const dispatch = useDispatch()
     const visiableTasks = useSelector((state: IState) => state.allTasks)
     const taskColumns = useSelector((state: IState) => state.columns)
-    const taskNumber = useSelector((state: IState) => state.taskNumber)
     //useState const
     const [taskModal, setTaskModal] = React.useState(false)
     const [searchText, setSearchText] = React.useState("")
@@ -33,7 +32,7 @@ export default function Tasks() {
                 visiableTasks[i].visiable = false
         }
         dispatch(setTasks([...visiableTasks]))
-        setTaskColumns(taskColumns)
+        // setTaskColumns(taskColumns)
     }, [searchText])
 
     // React.useEffect(() => {
@@ -102,7 +101,8 @@ export default function Tasks() {
             const destItems: ITask[] = [...destColumn.tasks];
 
             const [removed]: ITask[] = sourceItems.splice(source.index, 1);
-            destItems.splice(destination.index, 0, {...removed, status: setTaskStatus(destination.droppableId)});
+            removed.status = setTaskStatus(destination.droppableId)
+            destItems.splice(destination.index, 0, removed);
             onDnDTimeHandler(destItems[destination.index])
             const newDestColumn: ITaskColumn = {...destColumn, tasks: destItems}
             const newSourceColumn: ITaskColumn = {...sourceColumn, tasks: sourceItems}
@@ -127,7 +127,7 @@ export default function Tasks() {
             return
         const newTask: ITask = {
             id: new Date().getTime().toString(),
-            number: taskNumber,
+            number: visiableTasks.length + 1,
             description: "",
             title: title ? title : "",
             status: "queue",

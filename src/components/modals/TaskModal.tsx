@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { setActiveComment, setClickedTask, setInputActive } from '../../redux/actions/TaskActions';
 import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
 import Priority from './Priority';
-import { readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { FILES, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { Dashboard, GoogleDrive } from 'uppy';
 
 export interface ITaskModalProps {
@@ -32,14 +32,12 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
     const [subOpen, setSubOpen] = React.useState(true)
-    const [imgFromLocal, setImgFromLocal] = React.useState(localStorage.getItem("fileBase64"))
+    const [imgFromLocal, setImgFromLocal] = React.useState([localStorage.getItem(FILES)])
     const commentRef = React.useRef(null)
 
     const localTime = DateTime.local()
     const hoursDuration = countDuration().hours
     const minDuration = countDuration().minutes
-
-    const reader = new FileReader
 
     React.useEffect(() => {
         const input: any = commentRef.current
@@ -117,9 +115,10 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
       }
 
     const imageUpload = (e: any) => {
-        const file = e.target.files[0];
+        const file = e.target.files;
         getBase64(file).then(base64 => {
-            localStorage["fileBase64"] = [ base64];
+            console.log(base64)
+            localStorage[FILES] = base64;
             console.debug("file stored",base64);
         });
     };
@@ -160,7 +159,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
 
     const fileUploader = React.useMemo(() => {
         return <div className="task-modal__files">
-            <img className="task-modal__files__img" src={imgFromLocal || ""}/>
+            <img className="task-modal__files__img" src={imgFromLocal[0] || ""}/>
         </div>
         // return <DragDrop
         //     uppy={uppy}

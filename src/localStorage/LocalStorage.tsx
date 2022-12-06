@@ -3,6 +3,7 @@ import Tasks, { ITaskColumn } from "../components/taskScene/Tasks"
 
 export const COLUMNS = "columns"
 export const ALL_TASKS = "allTasks"
+export const FILES ="files"
 
 const queueColumn: ITaskColumn = {
     id: "0",

@@ -33,6 +33,7 @@ export interface IComment {
 }
 
 export default function Task({task}: ITaskProps) {
+  
     return (
         <Card
           bg={"light"}
