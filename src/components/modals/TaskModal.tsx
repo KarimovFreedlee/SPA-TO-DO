@@ -12,6 +12,8 @@ import { useDispatch } from 'react-redux';
 import { setActiveComment, setClickedTask, setInputActive } from '../../redux/actions/TaskActions';
 import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
 import Priority from './Priority';
+import { readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { Dashboard, GoogleDrive } from 'uppy';
 
 export interface ITaskModalProps {
     closeModal: () => void,
@@ -30,11 +32,14 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
     const [subOpen, setSubOpen] = React.useState(true)
+    const [imgFromLocal, setImgFromLocal] = React.useState(localStorage.getItem("fileBase64"))
     const commentRef = React.useRef(null)
 
     const localTime = DateTime.local()
     const hoursDuration = countDuration().hours
     const minDuration = countDuration().minutes
+
+    const reader = new FileReader
 
     React.useEffect(() => {
         const input: any = commentRef.current
@@ -43,21 +48,21 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
 
     }, [activeInput])
 
-    const uppy = new Uppy({
-        meta: { type: 'avatar' },
-        restrictions: { maxNumberOfFiles: 1 },
-        autoProceed: true,
-    })
+    // const uppy = new Uppy({
+    //     meta: { type: 'avatar' },
+    //     restrictions: { maxNumberOfFiles: 1 },
+    //     autoProceed: true,
+    // })
       
-    uppy.use(Tus, { endpoint: 'https://vault.apideck.com/logs' })
+    // uppy.use(GoogleDrive, { target: Dashboard, companionUrl: 'http://localhost:3020' })
       
-    uppy.on('complete', (result) => {
-        const url = result.successful[0].uploadURL
-        // store.dispatch({
-        //     type: 'SET_USER_AVATAR_URL',
-        //     payload: { url },
-        // })
-    })
+    // uppy.on('complete', (result) => {
+    //     const url = result.successful[0].uploadURL
+    //     // store.dispatch({
+    //     //     type: 'SET_USER_AVATAR_URL',
+    //     //     payload: { url },
+    //     // })
+    // })
 
     function countDuration() {
         const devDate = clickedTask.developingDate || localTime
@@ -102,6 +107,23 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
         clickedTask.subTasks.push(visiableTasks[visiableTasks.length - 1])
     }
 
+    const getBase64 = (file: any) => {
+        return new Promise((resolve,reject) => {
+           const reader = new FileReader();
+           reader.onload = () => resolve(reader.result);
+           reader.onerror = error => reject(error);
+           reader.readAsDataURL(file);
+        });
+      }
+
+    const imageUpload = (e: any) => {
+        const file = e.target.files[0];
+        getBase64(file).then(base64 => {
+            localStorage["fileBase64"] = [ base64];
+            console.debug("file stored",base64);
+        });
+    };
+
     const comments = React.useMemo(() => {
         return <>
             <div className="comments">
@@ -121,7 +143,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 value={clickedTask.description}
                 apiKey='u73ewtcis7l2b26jfjg7pneiatlxotpobnpiskzaun3rh82j' 
                 init={{
-                    height: 300,
+                    height: 250,
                     menubar: false,
                 }}
             />
@@ -137,18 +159,21 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     },[setTitleChange, titleChange, clickedTask])
 
     const fileUploader = React.useMemo(() => {
-        return <DragDrop
-            uppy={uppy}
-            locale={{
-                strings: {
-                    // Text to show on the droppable area.
-                    // `%{browse}` is replaced with a link that opens the system file selection dialog.
-                    dropHereOr: 'Drop files here or %{browse}',
-                    // Used as the label for the link that opens the system file selection dialog.
-                    browse: 'browse',
-                },
-            }}
-        />
+        return <div className="task-modal__files">
+            <img className="task-modal__files__img" src={imgFromLocal || ""}/>
+        </div>
+        // return <DragDrop
+        //     uppy={uppy}
+        //     locale={{
+        //         strings: {
+        //             // Text to show on the droppable area.
+        //             // `%{browse}` is replaced with a link that opens the system file selection dialog.
+        //             dropHereOr: 'Drop files here or %{browse}',
+        //             // Used as the label for the link that opens the system file selection dialog.
+        //             browse: 'browse',
+        //         },
+        //     }}
+        // />
     }, [clickedTask])
 
     const sideBar = React.useMemo(() => {
@@ -175,8 +200,9 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
         <div className="task-modal" onClick={closeModal}>
             <div className="task-modal__modal" onClick={(e) => e.stopPropagation()}>
                 <div className="task-modal__body">
-                    <p>Task: {clickedTask.number}</p>
+                    {/* <p>Task: {clickedTask.number}</p> */}
                     {title}
+                    <input type="file" accept=".jpg, .jpeg, .png, .pdf" onChange={imageUpload}/>
                     {fileUploader}
                     {description}
                     <button className="task-modal__button btn" onClick={saveChanges}>Save</button>

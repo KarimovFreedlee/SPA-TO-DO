@@ -19,7 +19,8 @@ export interface ITask {
   visiable: boolean,
   subTasks: ITask[] ,
   doneDate?: DateTime,
-  priority: TPriority
+  priority: TPriority,
+  files: string[]
 }
 
 export interface ITaskProps {

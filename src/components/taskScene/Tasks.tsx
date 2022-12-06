@@ -136,7 +136,8 @@ export default function Tasks() {
             visiable: true,
             comments: [],
             subTasks: [],
-            priority: "medium"
+            priority: "medium",
+            files: []
         }
         taskColumns[0].tasks.push(newTask)
         visiableTasks.push(newTask)

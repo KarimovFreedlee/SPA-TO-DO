@@ -36,6 +36,18 @@
         position: relative;
     }
 
+    &__files {
+        background: #c9c9c9;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-around;
+
+        &__img {
+            width: 100px;
+            height: 100px;
+        }
+    }
+
     &__subtasks {
 
         &__body {
