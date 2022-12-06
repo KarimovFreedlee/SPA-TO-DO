@@ -3,11 +3,12 @@ import Task, { ITask } from "./Task"
 import "../../css/Tasks.scss"
 import TaskModal from '../modals/TaskModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { ALL_TASKS, COLUMNS, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { ALL_TASKS, COLUMNS, PROJECTS, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { incTaskNumber, setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
 import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
+import { IProject } from '../projects/Projects';
 
 export interface ITaskColumn {
     id: string,
@@ -18,9 +19,11 @@ export interface ITaskColumn {
 export default function Tasks() {
     //redux const
     const dispatch = useDispatch()
-    const visiableTasks = useSelector((state: IState) => state.allTasks)
-    const taskColumns = useSelector((state: IState) => state.columns)
+    const activeProject: number = useSelector((state: IState) => state.activeProject)
+    const project: IProject = readLocalStorage(PROJECTS, "[]")[activeProject]
     //useState const
+    const [visiableTasks, setVisiableTasks] = React.useState(project.allTasks)
+    const [taskColumns, setTaskColumns] = React.useState(project.columns)
     const [taskModal, setTaskModal] = React.useState(false)
     const [searchText, setSearchText] = React.useState("")
 
@@ -32,17 +35,7 @@ export default function Tasks() {
                 visiableTasks[i].visiable = false
         }
         dispatch(setTasks([...visiableTasks]))
-        // setTaskColumns(taskColumns)
     }, [searchText])
-
-    // React.useEffect(() => {
-    //     writeLocalStorage(ALL_TASKS, visiableTasks)
-    //     writeLocalStorage(COLUMNS, [...taskColumns])
-    // }, [visiableTasks, taskColumns])
-
-    const setTaskColumns = (columns: ITaskColumn[]) => {
-        dispatch(setColumns(columns))
-    }
 
     const setTaskStatus = (columnIndex: string) => {
         switch(columnIndex) {
@@ -140,10 +133,7 @@ export default function Tasks() {
             files: []
         }
         taskColumns[0].tasks.push(newTask)
-        visiableTasks.push(newTask)
-        dispatch(incTaskNumber())
-        dispatch(setTasks([...visiableTasks]))
-        dispatch(setColumns([...taskColumns]))
+        setVisiableTasks([...visiableTasks, newTask])
     }
 
     const openModal = (item: ITask) => {

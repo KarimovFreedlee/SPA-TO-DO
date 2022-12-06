@@ -5,6 +5,9 @@ import "../../css/Projects.scss"
 import { getProjectsFromLocalStorage, PROJECTS, writeLocalStorage } from '../../localStorage/LocalStorage'
 import { ITaskColumn } from '../taskScene/Tasks'
 import { ITask } from '../taskScene/Task'
+import { setActiveProject } from '../../redux/actions/TaskActions'
+import { useDispatch } from 'react-redux'
+import { Link } from "react-router-dom"
 
 export interface IProject {
     id: string,
@@ -30,6 +33,7 @@ const doneColumn: ITaskColumn = {
 }
 
 export default function Projects() {
+    const dispatch = useDispatch()
     const [projects, setProjects] = React.useState(getProjectsFromLocalStorage() || [])
 
     const createNewProject = () => {
@@ -46,26 +50,30 @@ export default function Projects() {
         writeLocalStorage(PROJECTS, [...projects, newProject]) 
     }
 
-    const openProject = (id: string) => {
-
+    const openProject = (index: number) => {
+        dispatch(setActiveProject(index))
+        console.log(index)
     }
 
     const getProjects = React.useMemo(() => {
         return projects.map((item, index) => {
-            return <Card
-            bg={"light"}
-            text={'dark'}
-            style={{ width: '18rem' }}
-            className="mb-2"
-            onClick={() => openProject(item.id)}
-        >
-            <Card.Body>
-            <Card.Title>{item.name}</Card.Title>
-            <Card.Text>
-                {item.id}
-            </Card.Text>
-            </Card.Body>
-        </Card>
+            return  <div onClick={() => openProject(index)}>
+            <Link to='/project'>
+                <Card
+                    bg={"light"}
+                    text={'dark'}
+                    style={{ width: '18rem' }}
+                    className="mb-2"
+                >
+                    <Card.Body>
+                    <Card.Title>{item.name}</Card.Title>
+                    <Card.Text>
+                        {item.id}
+                    </Card.Text>
+                    </Card.Body>
+                </Card>
+            </Link>
+            </div>
         })
     }, [projects])
 

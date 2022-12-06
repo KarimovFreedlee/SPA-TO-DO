@@ -10,6 +10,7 @@ export const SET_COMMENT_INDEX = "SET_COMMENT_INDEX"
 export const SET_ACTIVE_COMMENT = "SET_ACTIVE_COMMENT"
 export const SET_INPUT_ACTIVE = "SET_INPUT_ACTIVE"
 export const SET_TASK_NUMBER = "SET_TASK_NUMBER"
+export const SET_ACTIVE_PROJECT = "SET_ACTIVE_PROJECT"
 
 export interface IState {
     allTasks: ITask[]
@@ -17,7 +18,8 @@ export interface IState {
     clickTask: ITask,
     inputActive: boolean,
     activeComment: IComment[],
-    taskNumber: number
+    taskNumber: number,
+    activeProject: number
 }
 
 export const initialState: IState = {
@@ -26,7 +28,8 @@ export const initialState: IState = {
     clickTask: getTasksFromLocalStorage()[0],
     inputActive: false,
     activeComment: [],
-    taskNumber: 1
+    taskNumber: 1,
+    activeProject: 0
 }
 
 export interface IAction {
@@ -48,6 +51,8 @@ export const mainReducer = (state: IState = initialState, action: IAction): ISta
             return {...state, activeComment: action.payload }
         case SET_TASK_NUMBER:
             return {...state, taskNumber: state.taskNumber + 1 }
+        case SET_ACTIVE_PROJECT:
+            return {...state, activeProject: action.payload}
         default:
             return state
     }

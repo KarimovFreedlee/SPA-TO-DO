@@ -4,6 +4,7 @@ import { ITaskColumn } from "../../components/taskScene/Tasks"
 import { 
     IAction, 
     SET_ACTIVE_COMMENT, 
+    SET_ACTIVE_PROJECT, 
     SET_ALL_COLUMNS, 
     SET_ALL_TASKS, 
     SET_CLICK_TASK, 
@@ -64,6 +65,14 @@ export const incTaskNumber = () => {
     const newAction: IAction = {
         type: SET_TASK_NUMBER,
         payload: 0
+    }
+    return newAction
+}
+
+export const setActiveProject = (index: number) => {
+    const newAction: IAction = {
+        type: SET_ACTIVE_PROJECT,
+        payload: index
     }
     return newAction
 }
