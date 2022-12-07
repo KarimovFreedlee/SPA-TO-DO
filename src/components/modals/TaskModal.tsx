@@ -12,8 +12,9 @@ import { useDispatch } from 'react-redux';
 import { setActiveComment, setClickedTask, setInputActive } from '../../redux/actions/TaskActions';
 import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
 import Priority from './Priority';
-import { FILES, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { FILES, getProjectsFromLocalStorage, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { Dashboard, GoogleDrive } from 'uppy';
+import { IProject } from '../projects/Projects';
 
 export interface ITaskModalProps {
     closeModal: () => void,
@@ -22,11 +23,13 @@ export interface ITaskModalProps {
 
 export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const dispatch = useDispatch()
+    const activeProject: number = useSelector((state: IState) => state.activeProject)
+    const project: IProject = getProjectsFromLocalStorage()[activeProject]
     const activeInput = useSelector((state: IState) => state.inputActive)
     const activeCommentArray = useSelector((state: IState) => state.activeComment)
     const clickedTask = useSelector((state: IState) => state.clickTask)
-    const visiableTasks = useSelector((state: IState) => state.allTasks)
 
+    const [visiableTasks, setVisiableTasks] = React.useState(project.allTasks)
     const [descriptionText, setDescriptionText] = React.useState("")
     const [titleText, setTitleText] = React.useState(clickedTask.title)
     const [text, setText] = React.useState("")
@@ -101,7 +104,6 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
 
     const addSubtask = () => {
         addTask()
-        console.log(visiableTasks)
         clickedTask.subTasks.push(visiableTasks[visiableTasks.length - 1])
     }
 
@@ -142,7 +144,8 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 value={clickedTask.description}
                 apiKey='u73ewtcis7l2b26jfjg7pneiatlxotpobnpiskzaun3rh82j' 
                 init={{
-                    height: 250
+                    height: 250,
+                    menubar: false
                 }}
             />
         </>

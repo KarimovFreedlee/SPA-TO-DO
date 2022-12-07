@@ -3,7 +3,7 @@ import Task, { ITask } from "./Task"
 import "../../css/Tasks.scss"
 import TaskModal from '../modals/TaskModal';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
-import { ALL_TASKS, COLUMNS, getProjectsFromLocalStorage, PROJECTS, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
+import { ALL_TASKS, COLUMNS, getProjectsFromLocalStorage, PROJECTS, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { incTaskNumber, setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
@@ -20,21 +20,15 @@ export default function Tasks() {
     //redux const
     const dispatch = useDispatch()
     const activeProject: number = useSelector((state: IState) => state.activeProject)
-    const project: IProject = readLocalStorage(PROJECTS, "[]")[activeProject]
+    const project: IProject = getProjectsFromLocalStorage()[activeProject]
     //useState const
-    const [visiableTasks, setVisiableTasks] = React.useState(project.allTasks)
+    const [visiableTasks, setVisiableTasks] = React.useState(setAllTasks())
     const [taskColumns, setTaskColumns] = React.useState(project.columns)
     const [taskModal, setTaskModal] = React.useState(false)
     const [searchText, setSearchText] = React.useState("")
 
     React.useEffect(() => {
-        for(let i = 0; i < visiableTasks.length; i++) {
-            if(visiableTasks[i].title.includes(searchText) || visiableTasks[i].number.toString().includes(searchText))
-                visiableTasks[i].visiable = true
-            else
-                visiableTasks[i].visiable = false
-        }
-        dispatch(setTasks([...visiableTasks]))
+        setVisiableTasks([...filter(visiableTasks)])
     }, [searchText])
 
     React.useEffect(() => {
@@ -44,6 +38,16 @@ export default function Tasks() {
 
         writeLocalStorage(PROJECTS, projects)
     }, [taskColumns, visiableTasks])
+
+    const filter = (taskArr: ITask[]) => {
+        for(let i = 0; i < taskArr.length; i++) {
+            if(taskArr[i].title.includes(searchText) || taskArr[i].number.toString().includes(searchText))
+                taskArr[i].visiable = true
+            else
+                taskArr[i].visiable = false
+        }
+        return taskArr
+    }
 
     const setTaskStatus = (columnIndex: string) => {
         switch(columnIndex) {
@@ -158,6 +162,14 @@ export default function Tasks() {
     const onTextInputChange = (e: any) => {
         e.preventDefault()
         setSearchText(e.target.value);
+    }
+
+    function setAllTasks() {
+        const newTasks: ITask[] =[]
+        for (let i = 0; i < project.columns.length; i++) {
+            newTasks.push(...project.columns[i].tasks)
+        }
+        return newTasks.sort((a, b) => a.number - b.number)
     }
 
     return (
