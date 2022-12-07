@@ -58,7 +58,7 @@ export default function Projects() {
     const getProjects = React.useMemo(() => {
         return projects.map((item, index) => {
             return  <div onClick={() => openProject(index)}>
-            <Link to='/project'>
+            <Link to='/project' style={{ textDecoration: "none"}}>
                 <Card
                     bg={"light"}
                     text={'dark'}
@@ -79,11 +79,11 @@ export default function Projects() {
 
     return (
         <div className="projects">
+            <h2>Your projects</h2>
             <div className="projects__modal">
-                <h2>Your projects</h2>
                 {getProjects}
-            <button className="btn" onClick={createNewProject}>add</button>
             </div>
+            <button className="btn" onClick={createNewProject}>add</button>
         </div>
     )
 }

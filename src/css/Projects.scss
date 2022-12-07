@@ -3,4 +3,11 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    flex-direction: column;
+
+    &__modal {
+        max-height: 600px;
+        overflow: scroll;
+        overflow-x: hidden;
+    }
 }

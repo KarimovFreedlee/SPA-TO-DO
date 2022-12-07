@@ -70,28 +70,28 @@ export default function Tasks() {
         let developingDate = task.developingDate || localTime
         let developingTime = task.developingTime
 
-        switch(task.status) {
-            case "queue":
-                if(developingTime)
-                    task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
-                else
-                    task.developingTime = countTimeDuration(developingDate, localTime)
-                task.developingDate = undefined
-                task.doneDate = undefined
-            break;
-            case "developing":
-                task.developingDate = localTime
-                task.doneDate = undefined
-            break;
-            case "done":
-                if(developingTime)
-                    task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
-                else
-                    task.developingTime = countTimeDuration(developingDate, localTime)
-                task.developingDate = undefined
-                task.doneDate = localTime
-            break;
-        }    
+        // switch(task.status) {
+        //     case "queue":
+        //         if(developingTime)
+        //             task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
+        //         else
+        //             task.developingTime = countTimeDuration(developingDate, localTime)
+        //         task.developingDate = undefined
+        //         task.doneDate = undefined
+        //     break;
+        //     case "developing":
+        //         task.developingDate = localTime
+        //         task.doneDate = undefined
+        //     break;
+        //     case "done":
+        //         if(developingTime)
+        //             task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
+        //         else
+        //             task.developingTime = countTimeDuration(developingDate, localTime)
+        //         task.developingDate = undefined
+        //         task.doneDate = localTime
+        //     break;
+        // }    
     }
 
     const onDragEnd = (result: any, columns: ITaskColumn[], setTaskColumns: (columns: ITaskColumn[]) => void) => {
@@ -169,7 +169,7 @@ export default function Tasks() {
         for (let i = 0; i < project.columns.length; i++) {
             newTasks.push(...project.columns[i].tasks)
         }
-        return newTasks.sort((a, b) => a.number - b.number)
+        return newTasks
     }
 
     return (

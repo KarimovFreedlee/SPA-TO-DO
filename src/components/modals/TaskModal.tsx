@@ -15,6 +15,8 @@ import Priority from './Priority';
 import { FILES, getProjectsFromLocalStorage, readLocalStorage, writeLocalStorage } from '../../localStorage/LocalStorage';
 import { Dashboard, GoogleDrive } from 'uppy';
 import { IProject } from '../projects/Projects';
+import Dropzone from 'react-dropzone'
+import {useDropzone} from 'react-dropzone'
 
 export interface ITaskModalProps {
     closeModal: () => void,
@@ -35,12 +37,12 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
     const [subOpen, setSubOpen] = React.useState(true)
-    const [imgFromLocal, setImgFromLocal] = React.useState([localStorage.getItem(FILES)])
+    const [files, setfiles] = React.useState<string[]>(clickedTask.files)
     const commentRef = React.useRef(null)
 
     const localTime = DateTime.local()
-    const hoursDuration = countDuration().hours
-    const minDuration = countDuration().minutes
+    // const hoursDuration = countDuration().hours
+    // const minDuration = countDuration().minutes
 
     React.useEffect(() => {
         const input: any = commentRef.current
@@ -49,29 +51,13 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
 
     }, [activeInput])
 
-    // const uppy = new Uppy({
-    //     meta: { type: 'avatar' },
-    //     restrictions: { maxNumberOfFiles: 1 },
-    //     autoProceed: true,
-    // })
-      
-    // uppy.use(GoogleDrive, { target: Dashboard, companionUrl: 'http://localhost:3020' })
-      
-    // uppy.on('complete', (result) => {
-    //     const url = result.successful[0].uploadURL
-    //     // store.dispatch({
-    //     //     type: 'SET_USER_AVATAR_URL',
-    //     //     payload: { url },
-    //     // })
-    // })
+    // function countDuration() {
+    //     const devDate = clickedTask.developingDate || localTime
 
-    function countDuration() {
-        const devDate = clickedTask.developingDate || localTime
-
-        if(clickedTask.developingTime)
-            return clickedTask.developingTime?.plus(Duration.fromObject(localTime.minus(devDate.toObject()).toObject()))
-        return Duration.fromObject(localTime.minus(devDate.toObject()).toObject())
-    }
+    //     if(clickedTask.developingTime)
+    //         return clickedTask.developingTime?.plus(Duration.fromObject(localTime.minus(devDate.toObject()).toObject()))
+    //     return Duration.fromObject(localTime.minus(devDate.toObject()).toObject())
+    // }
 
     const onTextInputChange = (e: any) => {
         e.preventDefault()
@@ -106,24 +92,27 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
         addTask()
         clickedTask.subTasks.push(visiableTasks[visiableTasks.length - 1])
     }
+    
+    const onDrop = React.useCallback((acceptedFiles: any) => {
+        acceptedFiles.forEach((file: any) => {
+          const reader = new FileReader()
+    
+          reader.onabort = () => console.log('file reading was aborted')
+          reader.onerror = () => console.log('file reading has failed')
+          reader.onload = () => {
+          // Do whatever you want with the file contents
+            const binaryStr = reader.result
+            if(binaryStr != null)
+                setfiles([...files, binaryStr as string])
+            
+            // writeLocalStorage("img", binaryStr)
+          }
+          reader.readAsDataURL(file)
+        })
+        
+    }, [])
 
-    const getBase64 = (file: any) => {
-        return new Promise((resolve,reject) => {
-           const reader = new FileReader();
-           reader.onload = () => resolve(reader.result);
-           reader.onerror = error => reject(error);
-           reader.readAsDataURL(file);
-        });
-      }
-
-    const imageUpload = (e: any) => {
-        const file = e.target.files;
-        getBase64(file).then(base64 => {
-            console.log(base64)
-            localStorage[FILES] = base64;
-            console.debug("file stored",base64);
-        });
-    };
+    const {getRootProps, getInputProps} = useDropzone({onDrop})
 
     const comments = React.useMemo(() => {
         return <>
@@ -160,29 +149,21 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     },[setTitleChange, titleChange, clickedTask])
 
     const fileUploader = React.useMemo(() => {
-        return <div className="task-modal__files">
-            <img className="task-modal__files__img" src={imgFromLocal[0] || ""}/>
+        // return <div className="task-modal__files">
+        //     <img className="task-modal__files__img" src={imgFromLocal[0] || ""}/>
+        // </div>
+        return <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
-        // return <DragDrop
-        //     uppy={uppy}
-        //     locale={{
-        //         strings: {
-        //             // Text to show on the droppable area.
-        //             // `%{browse}` is replaced with a link that opens the system file selection dialog.
-        //             dropHereOr: 'Drop files here or %{browse}',
-        //             // Used as the label for the link that opens the system file selection dialog.
-        //             browse: 'browse',
-        //         },
-        //     }}
-        // />
     }, [clickedTask])
 
     const sideBar = React.useMemo(() => {
         return <div className="task-modal__sidebar">
             <p>Status: {clickedTask.status}</p>
             <Priority/>
-            <p>time at work: {hoursDuration} hours {minDuration} min</p>
-            {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>}
+            {/* <p>time at work: {hoursDuration} hours {minDuration} min</p> */}
+            {/* {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>} */}
             <div className="task-modal__subtasks">
                 <p className="task-modal__subtasks__text" onClick={() => setSubOpen(!subOpen)}>subtasks</p>
                 {/* <div className="task-modal__subtasks__body"> */}
@@ -203,7 +184,6 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 <div className="task-modal__body">
                     {/* <p>Task: {clickedTask.number}</p> */}
                     {title}
-                    <input type="file" accept=".jpg, .jpeg, .png, .pdf" onChange={imageUpload}/>
                     {fileUploader}
                     {description}
                     <button className="task-modal__button btn" onClick={saveChanges}>Save</button>
