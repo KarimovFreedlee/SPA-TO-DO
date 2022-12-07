@@ -10,7 +10,8 @@ import {
     SET_CLICK_TASK, 
     SET_COMMENT_INDEX, 
     SET_INPUT_ACTIVE, 
-    SET_TASK_NUMBER
+    SET_TASK_NUMBER,
+    SET_FILE_UPLOAD
 } from "../reducers/MainReducer"
 
 export const setTasks = (tasks: ITask[]) => {
@@ -73,6 +74,14 @@ export const setActiveProject = (index: number) => {
     const newAction: IAction = {
         type: SET_ACTIVE_PROJECT,
         payload: index
+    }
+    return newAction
+}
+
+export const setFileUpload = (value: boolean) => {
+    const newAction: IAction = {
+        type: SET_FILE_UPLOAD,
+        payload: value
     }
     return newAction
 }

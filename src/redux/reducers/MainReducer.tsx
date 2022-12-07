@@ -11,6 +11,7 @@ export const SET_ACTIVE_COMMENT = "SET_ACTIVE_COMMENT"
 export const SET_INPUT_ACTIVE = "SET_INPUT_ACTIVE"
 export const SET_TASK_NUMBER = "SET_TASK_NUMBER"
 export const SET_ACTIVE_PROJECT = "SET_ACTIVE_PROJECT"
+export const SET_FILE_UPLOAD = "SET_FILE_UPLOAD"
 
 export interface IState {
     allTasks: ITask[]
@@ -19,7 +20,8 @@ export interface IState {
     inputActive: boolean,
     activeComment: IComment[],
     taskNumber: number,
-    activeProject: number
+    activeProject: number,
+    fileUpload: boolean
 }
 
 export const initialState: IState = {
@@ -29,7 +31,8 @@ export const initialState: IState = {
     inputActive: false,
     activeComment: [],
     taskNumber: 1,
-    activeProject: 0
+    activeProject: 0,
+    fileUpload: false
 }
 
 export interface IAction {
@@ -53,6 +56,8 @@ export const mainReducer = (state: IState = initialState, action: IAction): ISta
             return {...state, taskNumber: state.taskNumber + 1 }
         case SET_ACTIVE_PROJECT:
             return {...state, activeProject: action.payload}
+        case SET_FILE_UPLOAD: 
+            return {...state, fileUpload: action.payload}
         default:
             return state
     }

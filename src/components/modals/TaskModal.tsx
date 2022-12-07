@@ -37,7 +37,8 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const [text, setText] = React.useState("")
     const [titleChange, setTitleChange] = React.useState(false)
     const [subOpen, setSubOpen] = React.useState(true)
-    const [files, setfiles] = React.useState<string[]>(clickedTask.files)
+    const [filesOpen, setFilesOpen] = React.useState(true)
+    const [files, setfiles] = React.useState<string[]>(readLocalStorage(clickedTask.id + project.id, "[]"))
     const commentRef = React.useRef(null)
 
     const localTime = DateTime.local()
@@ -103,9 +104,8 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
           // Do whatever you want with the file contents
             const binaryStr = reader.result
             if(binaryStr != null)
-                setfiles([...files, binaryStr as string])
-            
-            // writeLocalStorage("img", binaryStr)
+                files.push(binaryStr as string)
+            writeLocalStorage(clickedTask.id + project.id, files)
           }
           reader.readAsDataURL(file)
         })
@@ -149,21 +149,31 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     },[setTitleChange, titleChange, clickedTask])
 
     const fileUploader = React.useMemo(() => {
-        // return <div className="task-modal__files">
-        //     <img className="task-modal__files__img" src={imgFromLocal[0] || ""}/>
-        // </div>
-        return <div {...getRootProps()}>
+        return <div {...getRootProps()} className="task-modal__uploader">
             <input {...getInputProps()} />
             <p>Drag 'n' drop some files here, or click to select files</p>
         </div>
-    }, [clickedTask])
+    }, [])
+
+    const getFiles = React.useMemo(() => {
+        return <div className="task-modal__files">
+            <p onClick={() => setFilesOpen(!filesOpen)}>files</p>
+            <div className={`task-modal__container task-modal__container${filesOpen ? "-open" : "-close"}`}>
+                {files.map((item, index) => {
+                    return <img src={item} />
+                })}
+            </div>
+        </div>
+    },[filesOpen, files.length])
 
     const sideBar = React.useMemo(() => {
         return <div className="task-modal__sidebar">
+            <p>Task number: {clickedTask.number}</p>
             <p>Status: {clickedTask.status}</p>
             <Priority/>
             {/* <p>time at work: {hoursDuration} hours {minDuration} min</p> */}
             {/* {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>} */}
+            {getFiles}
             <div className="task-modal__subtasks">
                 <p className="task-modal__subtasks__text" onClick={() => setSubOpen(!subOpen)}>subtasks</p>
                 {/* <div className="task-modal__subtasks__body"> */}
@@ -176,13 +186,12 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
             </div>
             <p className="task-modal__create-date">Create date: {clickedTask.createDate.toLocaleString()}</p>
         </div>
-    }, [clickedTask.subTasks.length, subOpen])
+    }, [clickedTask.subTasks.length, subOpen, filesOpen, files.length])
 
     return (
         <div className="task-modal" onClick={closeModal}>
             <div className="task-modal__modal" onClick={(e) => e.stopPropagation()}>
                 <div className="task-modal__body">
-                    {/* <p>Task: {clickedTask.number}</p> */}
                     {title}
                     {fileUploader}
                     {description}

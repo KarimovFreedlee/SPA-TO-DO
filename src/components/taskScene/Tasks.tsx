@@ -21,6 +21,7 @@ export default function Tasks() {
     const dispatch = useDispatch()
     const activeProject: number = useSelector((state: IState) => state.activeProject)
     const project: IProject = getProjectsFromLocalStorage()[activeProject]
+    const clickedTask = useSelector((state: IState) => state.clickTask)
     //useState const
     const [visiableTasks, setVisiableTasks] = React.useState(setAllTasks())
     const [taskColumns, setTaskColumns] = React.useState(project.columns)

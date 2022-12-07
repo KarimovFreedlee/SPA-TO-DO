@@ -2,6 +2,7 @@
     background-color: rgba(9, 30, 66, 0.54);
     position: absolute;
     top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -36,15 +37,61 @@
         position: relative;
     }
 
-    &__files {
-        background-color: #f4f5f7;
-        margin: 10px 0;
-        display: flex;
-        justify-content: space-around;
-
+    &__uploader {
+        // background-color: #f4f5f7;
+        // margin: 10px 0;
+        // display: flex;
+        // justify-content: space-around;
+        border: 1px solid #0d6efd;
+        margin-bottom: 20px;
+ 
         &__img {
             width: 100px;
             height: 100px;
+        }
+    }
+
+    &__files {
+        margin-bottom: 10px;
+        max-width: 269px;
+
+        p{
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #c9c9c9;
+            cursor: pointer;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    }
+
+    &__container {
+        display: flex;
+        justify-content: space-around;
+        overflow: scroll;
+        overflow-y: hidden;
+        transition: 1s;    
+        border: 1px solid #c9c9c9;
+        padding-top: 5px;
+        margin-top: -17px;
+
+        &-open {
+            height: 58px;
+        }
+
+        &-close {
+            height: 0px;
+        }
+
+        &::-webkit-scrollbar {
+            width: 5px;
+            height: 8px;
+            background-color: rgb(255, 255, 255); /* or add it to the track */
         }
     }
 
@@ -64,7 +111,7 @@
             }
 
             &-open {
-                height: 400px;
+                height: 360px;
             }
 
             &-close {
