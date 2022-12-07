@@ -21,7 +21,7 @@ export default function Comments({comments, sendComment}: ICommentsProps) {
     return (
     <>
         {comments.map((item, index) => {
-            return <div key={index} className="comments__comment" ref={commentRef}>
+            return <div key={index} className="comments__comment" ref={commentRef} style={index === comments.length - 1 ? {border: "none"} : {}}>
                 {item.comment}
                 <div className="comments__options">
                     <p onClick={() => onRespondClick(index)}>respond</p>
