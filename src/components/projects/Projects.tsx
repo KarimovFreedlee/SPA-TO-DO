@@ -58,21 +58,21 @@ export default function Projects() {
     const getProjects = React.useMemo(() => {
         return projects.map((item, index) => {
             return  <div onClick={() => openProject(index)}>
-            <Link to='/project' style={{ textDecoration: "none"}}>
-                <Card
-                    bg={"light"}
-                    text={'dark'}
-                    style={{ width: '18rem' }}
-                    className="mb-2"
-                >
-                    <Card.Body>
-                    <Card.Title>{item.name}</Card.Title>
-                    <Card.Text>
-                        {item.id}
-                    </Card.Text>
-                    </Card.Body>
-                </Card>
-            </Link>
+                <Link to='/project' style={{ textDecoration: "none"}}>
+                    <Card
+                        bg={"light"}
+                        text={'dark'}
+                        style={{ width: '18rem' }}
+                        className="mb-2"
+                    >
+                        <Card.Body>
+                        <Card.Title>{item.name}</Card.Title>
+                        <Card.Text>
+                            {item.id}
+                        </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Link>
             </div>
         })
     }, [projects])
