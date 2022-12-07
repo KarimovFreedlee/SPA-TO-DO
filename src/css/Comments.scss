@@ -8,6 +8,12 @@
     margin: 20px 0;
     background-color: #f4f5f7;
 
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 8px;
+        background-color: rgb(255, 255, 255); /* or add it to the track */
+    }
+
     &__comment {
         position: relative;
         left: 5%;

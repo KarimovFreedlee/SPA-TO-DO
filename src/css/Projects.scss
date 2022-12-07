@@ -2,12 +2,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     flex-direction: column;
 
-    &__modal {
-        max-height: 600px;
+    &__modal {    
+        height: 600px;
+        width: 310px;
         overflow: scroll;
         overflow-x: hidden;
+
+        &::-webkit-scrollbar {
+            width: 5px;
+            height: 8px;
+            background-color: rgb(255, 255, 255); /* or add it to the track */
+        }
     }
 }

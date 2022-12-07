@@ -57,6 +57,12 @@
             margin-top: -17px;
             transition: 1s;
 
+            &::-webkit-scrollbar {
+                width: 5px;
+                height: 8px;
+                background-color: rgb(255, 255, 255); /* or add it to the track */
+            }
+
             &-open {
                 height: 400px;
             }
