@@ -91,7 +91,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
 
     const addSubtask = () => {
         addTask()
-        clickedTask.subTasks.push(visiableTasks[visiableTasks.length - 1])
+        clickedTask.subTasks.push(visiableTasks[visiableTasks.length])
     }
     
     const onDrop = React.useCallback((acceptedFiles: any) => {
@@ -169,7 +169,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
 
     const sideBar = React.useMemo(() => {
         return <div className="task-modal__sidebar">
-            <p>Task number: {clickedTask.number}</p>
+            <p>{project.name}: {clickedTask.number}</p>
             <p>Status: {clickedTask.status}</p>
             <Priority/>
             {/* <p>time at work: {hoursDuration} hours {minDuration} min</p> */}
@@ -187,7 +187,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
             </div>
             <p className="task-modal__create-date">Create date: {clickedTask.createDate.toLocaleString()}</p>
         </div>
-    }, [clickedTask.subTasks.length, subOpen, filesOpen, files])
+    }, [clickedTask.subTasks.length, subOpen, filesOpen, files, project])
 
     return (
         <div className="task-modal" onClick={closeModal}>

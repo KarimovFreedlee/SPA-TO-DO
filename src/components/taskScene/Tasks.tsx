@@ -21,7 +21,6 @@ export default function Tasks() {
     const dispatch = useDispatch()
     const activeProject: number = useSelector((state: IState) => state.activeProject)
     const project: IProject = getProjectsFromLocalStorage()[activeProject]
-    const clickedTask = useSelector((state: IState) => state.clickTask)
     //useState const
     const [visiableTasks, setVisiableTasks] = React.useState(setAllTasks())
     const [taskColumns, setTaskColumns] = React.useState(project.columns)
@@ -95,6 +94,14 @@ export default function Tasks() {
         // }    
     }
 
+    const reorder = (list: ITaskColumn, startIndex: number, endIndex: number) => {
+        const result = list.tasks;
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+      
+        return result;
+    };
+
     const onDragEnd = (result: any, columns: ITaskColumn[], setTaskColumns: (columns: ITaskColumn[]) => void) => {
         if (!result.destination) return;
         const { source, destination } = result;
@@ -118,11 +125,7 @@ export default function Tasks() {
 
             setTaskColumns([...columns]);
         } else {
-            const column = columns[source.droppableId];
-            const copiedItems: ITask[] = [...column.tasks];
-            const [removed] = copiedItems.splice(source.index, 1);
-            copiedItems.splice(destination.index, 0, removed);
-            // columns[destination.droppableId].tasks = copiedItems
+            columns[destination.droppableId].tasks = [...reorder(columns[source.droppableId], source.index, destination.index)]
             setTaskColumns([...columns]);
         }
     };
