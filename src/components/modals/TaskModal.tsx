@@ -105,6 +105,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
             const binaryStr = reader.result
             if(binaryStr != null)
                 files.push(binaryStr as string)
+            setfiles([...files])
             writeLocalStorage(clickedTask.id + project.id, files)
           }
           reader.readAsDataURL(file)
@@ -164,7 +165,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 })}
             </div>
         </div>
-    },[filesOpen, files.length])
+    },[filesOpen, files])
 
     const sideBar = React.useMemo(() => {
         return <div className="task-modal__sidebar">
@@ -186,7 +187,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
             </div>
             <p className="task-modal__create-date">Create date: {clickedTask.createDate.toLocaleString()}</p>
         </div>
-    }, [clickedTask.subTasks.length, subOpen, filesOpen, files.length])
+    }, [clickedTask.subTasks.length, subOpen, filesOpen, files])
 
     return (
         <div className="task-modal" onClick={closeModal}>
