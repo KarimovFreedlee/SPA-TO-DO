@@ -15,7 +15,6 @@ import {
 } from "../reducers/MainReducer"
 
 export const setTasks = (tasks: ITask[]) => {
-    console.log("action")
     const newAction: IAction = {
         type: SET_ALL_TASKS,
         payload: tasks

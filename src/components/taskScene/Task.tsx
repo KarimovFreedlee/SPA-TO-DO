@@ -11,14 +11,14 @@ export interface ITask {
   title: string,
   description: string,
   status: TStatus,
-  createDate: DateTime,
-  developingDate?: DateTime,
-  developingTime?: Duration,
+  createDate: string,
+  developingDate: number,
+  developingTime: number,
   time: string,
   comments: IComment[],
   visiable: boolean,
   subTasks: ITask[] ,
-  doneDate?: DateTime,
+  doneDate?: string,
   priority: TPriority,
   files: string[]
 }
@@ -44,9 +44,10 @@ export default function Task({task}: ITaskProps) {
         >
           <Card.Body>
             <Card.Title>{task.title}</Card.Title>
-            <Card.Text>
-              {task.status}
+            <Card.Text> 
+              {task.priority} priority
             </Card.Text>
+            number: {task.number}
           </Card.Body>
         </Card>
     )

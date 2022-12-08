@@ -68,7 +68,7 @@ export default function Projects() {
                         <Card.Body>
                         <Card.Title>{item.name}</Card.Title>
                         <Card.Text>
-                            {item.id}
+                            id: {item.id}
                         </Card.Text>
                         </Card.Body>
                     </Card>

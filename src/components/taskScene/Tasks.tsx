@@ -62,36 +62,32 @@ export default function Tasks() {
     }
 
     const countTimeDuration = (startPoint: DateTime, endpoint: DateTime) => {
-        return Duration.fromObject(endpoint.minus(startPoint.toObject()).toObject())
+        return Duration.fromMillis(endpoint.minus(startPoint.toMillis()).toMillis())
     }   
 
     const onDnDTimeHandler = (task: ITask) => {
-        let localTime = DateTime.local()
-        let developingDate = task.developingDate || localTime
+        const localString = new Date().toLocaleDateString()
+        let localTime = new Date().getTime()
+        let developingDate = task.developingDate || localTime 
+        // let developingDate = task.developingDate || localTime
         let developingTime = task.developingTime
 
-        // switch(task.status) {
-        //     case "queue":
-        //         if(developingTime)
-        //             task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
-        //         else
-        //             task.developingTime = countTimeDuration(developingDate, localTime)
-        //         task.developingDate = undefined
-        //         task.doneDate = undefined
-        //     break;
-        //     case "developing":
-        //         task.developingDate = localTime
-        //         task.doneDate = undefined
-        //     break;
-        //     case "done":
-        //         if(developingTime)
-        //             task.developingTime = developingTime?.plus(countTimeDuration(developingDate, localTime))
-        //         else
-        //             task.developingTime = countTimeDuration(developingDate, localTime)
-        //         task.developingDate = undefined
-        //         task.doneDate = localTime
-        //     break;
-        // }    
+        switch(task.status) {
+            case "queue":
+                developingTime = (localTime - task.developingDate)
+                task.developingDate = 0
+                task.doneDate = undefined
+            break;
+            case "developing":
+                task.developingDate = localTime
+                task.doneDate = undefined
+            break;
+            case "done":
+                developingTime = localTime - developingDate
+                task.developingDate = 0
+                task.doneDate = localString
+            break;
+        }    
     }
 
     const reorder = (list: ITaskColumn, startIndex: number, endIndex: number) => {
@@ -140,13 +136,15 @@ export default function Tasks() {
             description: "",
             title: title ? title : "",
             status: "queue",
-            createDate: DateTime.local(),
+            createDate: new Date().toLocaleString(),
             time: "string",
             visiable: true,
             comments: [],
             subTasks: [],
             priority: "medium",
-            files: []
+            files: [],
+            developingDate: 0,
+            developingTime: 0
         }
         taskColumns[0].tasks.push(newTask)
         setTaskColumns([...taskColumns])

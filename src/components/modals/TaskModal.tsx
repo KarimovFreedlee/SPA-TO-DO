@@ -41,9 +41,7 @@ export default function TaskModal({closeModal, addTask, visiableTasks}: ITaskMod
     const [files, setfiles] = React.useState<string[]>(readLocalStorage(clickedTask.id + project.id, "[]"))
     const commentRef = React.useRef(null)
 
-    const localTime = DateTime.local()
-    // const hoursDuration = countDuration().hours
-    // const minDuration = countDuration().minutes
+    const localTime = new Date().getTime()
 
     React.useEffect(() => {
         const input: any = commentRef.current
@@ -52,13 +50,14 @@ export default function TaskModal({closeModal, addTask, visiableTasks}: ITaskMod
 
     }, [activeInput])
 
-    // function countDuration() {
-    //     const devDate = clickedTask.developingDate || localTime
+    function countDuration() {
+        const devDate = clickedTask.developingDate || localTime
+        const localHoursInMillis = new Date().getTimezoneOffset() / 60 * 60 * 60 *1000
 
-    //     if(clickedTask.developingTime)
-    //         return clickedTask.developingTime?.plus(Duration.fromObject(localTime.minus(devDate.toObject()).toObject()))
-    //     return Duration.fromObject(localTime.minus(devDate.toObject()).toObject())
-    // }
+        if(clickedTask.developingTime != undefined)
+            return new Date(clickedTask.developingTime + (localTime - devDate) + localHoursInMillis).toLocaleTimeString()
+        return new Date(localTime - devDate + localHoursInMillis).toLocaleTimeString()
+    }
 
     const onTextInputChange = (e: any) => {
         e.preventDefault()
@@ -172,12 +171,11 @@ export default function TaskModal({closeModal, addTask, visiableTasks}: ITaskMod
             <p>{project.name}: {clickedTask.number}</p>
             <p>Status: {clickedTask.status}</p>
             <Priority/>
-            {/* <p>time at work: {hoursDuration} hours {minDuration} min</p> */}
-            {/* {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>} */}
+            <p>time at work: {countDuration()}</p>
+            {clickedTask.doneDate ? <p>done: {clickedTask.doneDate?.toLocaleString()}</p> : <p>not done yet</p>}
             {getFiles}
             <div className="task-modal__subtasks">
                 <p className="task-modal__subtasks__text" onClick={() => setSubOpen(!subOpen)}>subtasks</p>
-                {/* <div className="task-modal__subtasks__body"> */}
                 <div className={`task-modal__subtasks__body task-modal__subtasks__body${subOpen ? "-open" : "-close"}`}>
                     {clickedTask.subTasks?.map((item,index) => {
                         return <div onClick={() => dispatch(setClickedTask(item))}><Task task={item}/></div>
@@ -185,7 +183,7 @@ export default function TaskModal({closeModal, addTask, visiableTasks}: ITaskMod
                 </div>
                 <button className="btn" onClick={addSubtask}>add</button>
             </div>
-            <p className="task-modal__create-date">Create date: {clickedTask.createDate.toLocaleString()}</p>
+            <p className="task-modal__create-date">Create date: {clickedTask.createDate}</p>
         </div>
     }, [clickedTask.subTasks.length, subOpen, filesOpen, files, project])
 
