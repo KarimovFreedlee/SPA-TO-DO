@@ -167,8 +167,8 @@ export default function Tasks() {
 
     return (
         <> 
-            <Link to='/' style={{ textDecoration: "none"}}><button className="btn">back</button></Link>
             <input type="text" placeholder='find task' onChange={(e) => onTextInputChange(e)}/>
+            <Link to='/' style={{ textDecoration: "none", marginBottom: "14px"}}><button className="btn">back</button></Link>
             <div className="tasks">
                 <DragDropContext onDragEnd={result => onDragEnd(result, taskColumns, setTaskColumns)}>
                     {taskColumns.map((item, index) => {
