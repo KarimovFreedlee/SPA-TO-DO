@@ -20,10 +20,11 @@ import {useDropzone} from 'react-dropzone'
 
 export interface ITaskModalProps {
     closeModal: () => void,
-    addTask: () => void
+    addTask: () => void,
+    visiableTasks: ITask[]
 }
 
-export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
+export default function TaskModal({closeModal, addTask, visiableTasks}: ITaskModalProps) {
     const dispatch = useDispatch()
     const activeProject: number = useSelector((state: IState) => state.activeProject)
     const project: IProject = getProjectsFromLocalStorage()[activeProject]
@@ -31,7 +32,6 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
     const activeCommentArray = useSelector((state: IState) => state.activeComment)
     const clickedTask = useSelector((state: IState) => state.clickTask)
 
-    const [visiableTasks, setVisiableTasks] = React.useState(project.allTasks)
     const [descriptionText, setDescriptionText] = React.useState("")
     const [titleText, setTitleText] = React.useState(clickedTask.title)
     const [text, setText] = React.useState("")
@@ -91,7 +91,7 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
 
     const addSubtask = () => {
         addTask()
-        clickedTask.subTasks.push(visiableTasks[visiableTasks.length])
+        clickedTask.subTasks.push(visiableTasks[visiableTasks.length - 1])
     }
     
     const onDrop = React.useCallback((acceptedFiles: any) => {
@@ -202,5 +202,5 @@ export default function TaskModal({closeModal, addTask}: ITaskModalProps) {
                 {sideBar}
             </div>
         </div>
-  )
+    )
 }

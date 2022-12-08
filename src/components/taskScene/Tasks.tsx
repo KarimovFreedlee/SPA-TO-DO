@@ -150,7 +150,8 @@ export default function Tasks() {
         }
         taskColumns[0].tasks.push(newTask)
         setTaskColumns([...taskColumns])
-        setVisiableTasks([...visiableTasks, newTask])
+        visiableTasks.push(newTask)
+        setVisiableTasks([...visiableTasks])
     }
 
     const openModal = (item: ITask) => {
@@ -178,7 +179,7 @@ export default function Tasks() {
 
     return (
         <>
-            <input type="text" onChange={(e) => onTextInputChange(e)}/>
+            <input type="text" placeholder='find task' onChange={(e) => onTextInputChange(e)}/>
             <div className="tasks">
                 <DragDropContext onDragEnd={result => onDragEnd(result, taskColumns, setTaskColumns)}>
                     {taskColumns.map((item, index) => {
@@ -219,7 +220,7 @@ export default function Tasks() {
                 </DragDropContext>
             </div>
             <button className="btn" onClick={addTask}>Add</button>
-            {taskModal && <TaskModal addTask={addTask} closeModal={closeModal}/>}
+            {taskModal && <TaskModal visiableTasks={visiableTasks} addTask={addTask} closeModal={closeModal}/>}
         </>
     )
 }
