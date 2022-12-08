@@ -41,8 +41,6 @@ export default function TaskModal({closeModal, addTask, visiableTasks}: ITaskMod
     const [files, setfiles] = React.useState<string[]>(readLocalStorage(clickedTask.id + project.id, "[]"))
     const commentRef = React.useRef(null)
 
-    const localTime = new Date().getTime()
-
     React.useEffect(() => {
         const input: any = commentRef.current
         if(input && activeInput)
@@ -51,12 +49,12 @@ export default function TaskModal({closeModal, addTask, visiableTasks}: ITaskMod
     }, [activeInput])
 
     function countDuration() {
+        const localTime = new Date().getTime()
         const devDate = clickedTask.developingDate || localTime
         const localHoursInMillis = new Date().getTimezoneOffset() / 60 * 60 * 60 *1000
-
-        if(clickedTask.developingTime != undefined)
-            return new Date(clickedTask.developingTime + (localTime - devDate) + localHoursInMillis).toLocaleTimeString()
-        return new Date(localTime - devDate + localHoursInMillis).toLocaleTimeString()
+        // if(clickedTask.developingTime != undefined)
+        
+        return new Date(localTime - new Date(devDate).getTime() + localHoursInMillis).toLocaleTimeString()
     }
 
     const onTextInputChange = (e: any) => {

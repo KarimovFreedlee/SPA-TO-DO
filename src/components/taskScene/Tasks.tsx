@@ -7,8 +7,8 @@ import { ALL_TASKS, COLUMNS, getProjectsFromLocalStorage, PROJECTS, writeLocalSt
 import { useDispatch, useSelector } from 'react-redux';
 import { IState } from '../../redux/reducers/MainReducer';
 import { incTaskNumber, setActiveComment, setClickedTask, setColumns, setTasks } from '../../redux/actions/TaskActions';
-import {DateTime, Duration, Info, Interval, Settings} from 'luxon';
 import { IProject } from '../projects/Projects';
+import { Link } from 'react-router-dom';
 
 export interface ITaskColumn {
     id: string,
@@ -61,21 +61,13 @@ export default function Tasks() {
         }
     }
 
-    const countTimeDuration = (startPoint: DateTime, endpoint: DateTime) => {
-        return Duration.fromMillis(endpoint.minus(startPoint.toMillis()).toMillis())
-    }   
-
     const onDnDTimeHandler = (task: ITask) => {
         const localString = new Date().toLocaleDateString()
         let localTime = new Date().getTime()
-        let developingDate = task.developingDate || localTime 
-        // let developingDate = task.developingDate || localTime
-        let developingTime = task.developingTime
 
         switch(task.status) {
             case "queue":
-                developingTime = (localTime - task.developingDate)
-                task.developingDate = 0
+                task.developingDate = undefined
                 task.doneDate = undefined
             break;
             case "developing":
@@ -83,8 +75,7 @@ export default function Tasks() {
                 task.doneDate = undefined
             break;
             case "done":
-                developingTime = localTime - developingDate
-                task.developingDate = 0
+                task.developingDate = undefined
                 task.doneDate = localString
             break;
         }    
@@ -143,8 +134,7 @@ export default function Tasks() {
             subTasks: [],
             priority: "medium",
             files: [],
-            developingDate: 0,
-            developingTime: 0
+            developingTime: new Date().getTime()
         }
         taskColumns[0].tasks.push(newTask)
         setTaskColumns([...taskColumns])
@@ -176,7 +166,8 @@ export default function Tasks() {
     }
 
     return (
-        <>
+        <> 
+            <Link to='/' style={{ textDecoration: "none"}}><button className="btn">back</button></Link>
             <input type="text" placeholder='find task' onChange={(e) => onTextInputChange(e)}/>
             <div className="tasks">
                 <DragDropContext onDragEnd={result => onDragEnd(result, taskColumns, setTaskColumns)}>

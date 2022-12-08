@@ -12,7 +12,7 @@ export interface ITask {
   description: string,
   status: TStatus,
   createDate: string,
-  developingDate: number,
+  developingDate?: number,
   developingTime: number,
   time: string,
   comments: IComment[],
